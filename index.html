@@ -190,9 +190,8 @@ body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:
 <!-- HERO -->
 <div class="hero">
   <div class="crest">56</div>
-  <h1>SADM · 56º Batalhão<br>de Polícia Militar</h1>
+  <h1>SADM · Seção Administrativa<br>56º BPM</h1>
   <div class="city">Itajubá · Minas Gerais</div>
-  <div class="quote">"Polícia Militar de Minas Gerais · servir e proteger com integridade, eficiência e respeito à dignidade humana."</div>
 </div>
 
 <!-- CLOCK CARD -->
@@ -200,15 +199,14 @@ body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:
   <div>
     <div class="time" id="hTime">--:--:--</div>
     <div class="date" id="hDate">--</div>
-    <div class="cycle" id="hCycle">CICLO · --/272</div>
   </div>
   <div class="pulse-ring">56</div>
 </div>
 
-<!-- KPI STRIP -->
+<!-- KPI STRIP · jurídico-documental -->
 <div class="kpi-strip">
-  <div class="kpi-mini"><div class="v">254</div><div class="l">Militares</div></div>
-  <div class="kpi-mini g"><div class="v">49k</div><div class="l">Documentos</div></div>
+  <div class="kpi-mini g"><div class="v">49.064</div><div class="l">Documentos</div></div>
+  <div class="kpi-mini"><div class="v">35</div><div class="l">Processos</div></div>
   <div class="kpi-mini b"><div class="v">71</div><div class="l">DAs canônicas</div></div>
 </div>
 
@@ -233,7 +231,7 @@ body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:
       <div class="nm">Gestão Estratégica<small>Compliance · AADP</small></div>
     </div>
   </div>
-  <div class="desc">Score do Programa Integridade PMMG · cronograma AADP Res. 5.458/2025 · 254 militares no ciclo.</div>
+  <div class="desc">Score do Programa Integridade PMMG · cronograma AADP Res. 5.458/2025 · ciclo documental anual.</div>
   <div class="tags"><span class="tag">82/100</span><span class="tag">Meta 92</span></div>
 </a>
 
@@ -290,7 +288,7 @@ body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:
 <!-- FOOTER -->
 <div class="foot">
   <div class="row"><span class="gold">SADM 56º BPM · Itajubá-MG</span></div>
-  <div class="row">17ª RPM · Polícia Militar de Minas Gerais</div>
+  <div class="row">17ª RPM · PMMG</div>
   <div class="row" style="margin-top:6px;color:var(--dim)">Cap. Fillipe Caldeira · Chefia SADM</div>
   <span class="badge-onda">★ ONDA 28+ MOBILE</span>
 </div>
@@ -306,9 +304,6 @@ body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:
     const ss=String(d.getSeconds()).padStart(2,'0');
     document.getElementById('hTime').textContent=hh+':'+mm+':'+ss;
     document.getElementById('hDate').textContent=dias[d.getDay()]+' · '+d.getDate()+' '+meses[d.getMonth()]+' '+d.getFullYear();
-    const start=new Date(d.getFullYear(),0,1);
-    const dc=Math.floor((d-start)/(1000*60*60*24))+1;
-    document.getElementById('hCycle').textContent='CICLO PRIMORDIA · '+dc+'/272';
   }
   setInterval(tick,1000);tick();
 })();
