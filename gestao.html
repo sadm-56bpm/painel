@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E16">
+<title>Gestão Mobile · SADM 56 BPM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16;--bg2:#0D121C;--bg3:#131A28;--bg4:#1A2336;--bg5:#232E47;
+  --line:#1F2A40;--line2:#2E3B58;--line3:#3A4A6E;
+  --txt:#E8EBF0;--txt2:#C5CBD8;--mut:#8A95AC;--dim:#5A6478;
+  --gold:#C9A348;--goldL:#E8C77A;--goldD:#8B6F2E;
+  --blue:#4A8AD8;--blueL:#7BB4E8;
+  --green:#4ABF7A;--greenL:#8FD9A8;
+  --purple:#8A5AD8;--purpleL:#B894E8;
+  --red:#C84141;--redL:#E89090;
+  --orange:#D88838;--orangeL:#F0B070;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;width:100vw;overflow-x:hidden}
+body{padding:max(env(safe-area-inset-top),14px) 12px max(env(safe-area-inset-bottom),18px)}
+
+.topbar{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;margin-bottom:14px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--line2);border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.4);position:relative;overflow:hidden}
+.topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--goldL),var(--gold))}
+.tb-crest{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--bg4),var(--bg5));border:2px solid var(--gold);display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:14px;color:var(--gold)}
+.tb-title{font-family:'IBM Plex Serif',serif;font-size:13px;font-weight:600;color:var(--gold);line-height:1.1}
+.tb-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mut);letter-spacing:0.8px;margin-top:2px;text-transform:uppercase}
+.tb-clock{text-align:right;font-family:'IBM Plex Mono',monospace}
+.tb-time{font-size:16px;font-weight:700;color:var(--gold);line-height:1}
+.tb-date{font-size:8.5px;color:var(--mut);margin-top:2px}
+
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;background:var(--bg3);border:1px solid var(--line2);border-radius:12px;padding:4px}
+.tab-btn{background:transparent;border:none;color:var(--mut);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:10px;border-radius:8px;cursor:pointer;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;transition:all 0.2s}
+.tab-btn.active{background:linear-gradient(135deg,var(--gold),var(--goldD));color:var(--bg);box-shadow:0 4px 14px rgba(201,163,72,0.3)}
+
+.tab-content{display:none}
+.tab-content.active{display:block;animation:slideIn 0.35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+h2.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin:14px 0 10px;display:flex;align-items:center;gap:10px}
+h2.sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+/* HERO COMPLIANCE GAUGE */
+.gauge-hero{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:18px;padding:24px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+.gauge-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.gauge-svg{width:220px;height:220px;margin:0 auto}
+.gauge-overlay{position:relative;width:220px;height:220px;margin:0 auto;margin-top:-220px;display:grid;place-items:center;text-align:center;pointer-events:none}
+.gauge-overlay .v{font-family:'IBM Plex Mono',monospace;font-size:54px;font-weight:700;color:var(--gold);line-height:1}
+.gauge-overlay .l{font-size:10px;color:var(--mut);font-family:'IBM Plex Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.gauge-overlay .t{font-size:11px;color:var(--greenL);font-family:'IBM Plex Mono',monospace;margin-top:6px}
+.gauge-meta{margin-top:14px}
+.gauge-meta .gm-title{font-family:'IBM Plex Serif',serif;font-size:16px;font-weight:600;color:var(--gold)}
+.gauge-meta .gm-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);margin-top:4px;letter-spacing:0.8px;text-transform:uppercase}
+
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}
+.stat-cell{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:12px;padding:14px 10px;text-align:center}
+.stat-cell .sv{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;color:var(--gold);line-height:1}
+.stat-cell.g .sv{color:var(--greenL)}.stat-cell.b .sv{color:var(--blueL)}.stat-cell.o .sv{color:var(--orangeL)}.stat-cell.p .sv{color:var(--purpleL)}.stat-cell.r .sv{color:var(--redL)}
+.stat-cell .sl{font-size:9.5px;color:var(--mut);margin-top:5px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* EIXOS */
+.eixos{display:grid;gap:10px}
+.eixo{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:14px;padding:16px}
+.eixo .e-head{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-bottom:10px}
+.eixo .e-badge{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;color:var(--bg)}
+.eixo.e1 .e-badge{background:linear-gradient(135deg,var(--green),var(--greenL))}
+.eixo.e2 .e-badge{background:linear-gradient(135deg,var(--orange),var(--orangeL))}
+.eixo.e3 .e-badge{background:linear-gradient(135deg,var(--blue),var(--blueL))}
+.eixo.e4 .e-badge{background:linear-gradient(135deg,var(--purple),var(--purpleL))}
+.eixo .e-nm{font-size:13px;font-weight:600;color:var(--txt);line-height:1.2}
+.eixo .e-nm small{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;font-weight:400}
+.eixo .e-sc{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.eixo .e-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.eixo .e-fl{height:100%;border-radius:3px}
+.eixo.e1 .e-fl{background:linear-gradient(90deg,var(--green),var(--greenL))}
+.eixo.e2 .e-fl{background:linear-gradient(90deg,var(--orange),var(--orangeL))}
+.eixo.e3 .e-fl{background:linear-gradient(90deg,var(--blue),var(--blueL))}
+.eixo.e4 .e-fl{background:linear-gradient(90deg,var(--purple),var(--purpleL))}
+.eixo .e-subs{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px}
+.eixo .e-sub{display:flex;justify-content:space-between;padding:6px 8px;background:var(--bg4);border-radius:5px;color:var(--txt2)}
+.eixo .e-sub b{color:var(--gold);font-weight:600}
+
+/* AADP TIMELINE */
+.tl-card{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:16px;padding:18px;margin-bottom:14px}
+.tl-track{position:relative;height:8px;background:var(--bg4);border-radius:4px;margin-bottom:8px}
+.tl-track .tl-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--green),var(--greenL));border-radius:4px;width:42%}
+.tl-track .tl-today{position:absolute;top:-6px;left:42%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;background:var(--gold);border:3px solid var(--bg);box-shadow:0 0 14px var(--gold)}
+.tl-labels{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);letter-spacing:0.5px;margin-bottom:18px}
+.tl-labels .now{color:var(--gold);font-weight:600}
+.tl-stages{display:grid;gap:8px}
+.tl-stage{background:var(--bg4);border:1px solid var(--line2);border-radius:10px;padding:12px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.tl-stage.done{border-color:var(--green)}
+.tl-stage.cur{border-color:var(--gold);background:linear-gradient(180deg,rgba(201,163,72,0.1),var(--bg4))}
+.tl-stage.fut{opacity:0.55}
+.tl-stage .ts-st{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px;flex-shrink:0}
+.tl-stage.done .ts-st{background:var(--green);color:var(--bg)}
+.tl-stage.cur .ts-st{background:var(--gold);color:var(--bg);animation:pulse 2s infinite;box-shadow:0 0 14px var(--gold)}
+.tl-stage.fut .ts-st{background:var(--bg5);color:var(--mut);border:1px solid var(--line2)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,163,72,0.6)}50%{box-shadow:0 0 0 10px rgba(201,163,72,0)}}
+.tl-stage .ts-info .ts-nm{font-size:13px;font-weight:600;color:var(--txt)}
+.tl-stage .ts-info .ts-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+
+/* DISTRIBUIÇÃO 254 */
+.dist-card{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:14px;padding:16px;margin-bottom:14px}
+.dist-row{display:grid;grid-template-columns:100px 1fr 40px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:10.5px}
+.dist-row:last-child{border-bottom:none}
+.dist-row .lb{color:var(--txt2)}
+.dist-row .ba{height:16px;background:var(--bg4);border-radius:4px;overflow:hidden;position:relative}
+.dist-row .ba .fl{height:100%;border-radius:4px;position:relative}
+.dist-row .ba .fl .nm{position:absolute;right:4px;top:50%;transform:translateY(-50%);color:var(--bg);font-weight:700;font-size:9px}
+.dist-row .pc{text-align:right;font-weight:600;color:var(--gold);font-size:10.5px}
+
+/* ROADMAP */
+.rm-grid{display:grid;gap:10px;margin-top:14px}
+.rm-card{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:12px;padding:14px}
+.rm-card h4{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.rm-card ul{list-style:none;font-size:11.5px;color:var(--txt2);line-height:1.7}
+.rm-card li{padding:3px 0;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:8px}
+.rm-card li:last-child{border-bottom:none}
+.rm-card li::before{content:'▸';color:var(--gold);flex-shrink:0;margin-top:2px}
+
+.foot{margin-top:24px;padding:14px 8px 0;border-top:1px solid var(--line2);text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);letter-spacing:0.5px;line-height:1.7}
+.foot .gold{color:var(--gold)}
+.back-link{display:block;text-align:center;margin-top:14px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--blueL);padding:10px;background:var(--bg3);border:1px solid var(--line2);border-radius:10px;letter-spacing:0.5px;text-transform:uppercase}
+.back-link:active{background:var(--bg4)}
+/* === PREMIUM POLISH · aurora + glow + live stamp === */
+.premium-aurora{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden;opacity:0.45}
+.premium-aurora::before,.premium-aurora::after{content:"";position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);animation:auroraFlow 22s ease-in-out infinite}
+.premium-aurora::before{background:radial-gradient(circle,rgba(201,163,72,0.18),transparent 60%);top:-200px;left:-200px}
+.premium-aurora::after{background:radial-gradient(circle,rgba(74,138,216,0.12),transparent 60%);bottom:-200px;right:-200px;animation-delay:-11s}
+@keyframes auroraFlow{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,40px) scale(0.95)}}
+.live-stamp{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;background:rgba(74,191,122,0.08);border:1px solid rgba(74,191,122,0.25);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--greenL);letter-spacing:0.8px;text-transform:uppercase}
+.live-stamp .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:livePulse 1.4s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.live-stamp b{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+<div class="premium-aurora"></div>
+
+<div class="topbar">
+  <div class="tb-crest">56</div>
+  <div>
+    <div class="tb-title">Gestão Estratégica</div>
+    <div class="tb-sub">Compliance · AADP · 254 mil.</div>
+  </div>
+  <div class="tb-clock">
+    <div class="tb-time" id="tbTime">--:--</div>
+    <div class="tb-date" id="tbDate">--</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="compl">⚖ Compliance</button>
+  <button class="tab-btn" data-tab="aadp">📅 AADP</button>
+</div>
+
+<!-- TAB · COMPLIANCE -->
+<div class="tab-content active" id="t-compl">
+  <div class="gauge-hero">
+    <svg class="gauge-svg" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="82" fill="none" stroke="#1A2336" stroke-width="18"/>
+      <circle cx="100" cy="100" r="82" fill="none" stroke="url(#gm)" stroke-width="18" stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="93" transform="rotate(-90 100 100)"/>
+      <defs><linearGradient id="gm" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D88838"/><stop offset="100%" stop-color="#E8C77A"/></linearGradient></defs>
+    </svg>
+    <div class="gauge-overlay"><div><div class="v">82</div><div class="l">DE 100</div><div class="t">↗ META 92 · T4/2027</div></div></div>
+    <div class="gauge-meta">
+      <div class="gm-title">Programa Integridade PMMG/2024</div>
+      <div class="gm-sub">4 eixos · 8 subeixos</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell g"><div class="sv">+12</div><div class="sl">vs 2024</div></div>
+    <div class="stat-cell o"><div class="sv">−10</div><div class="sl">para meta</div></div>
+    <div class="stat-cell b"><div class="sv">18</div><div class="sl">meses</div></div>
+  </div>
+
+  <h2 class="sec">4 Eixos · breakdown</h2>
+  <div class="eixos">
+    <div class="eixo e1">
+      <div class="e-head">
+        <div class="e-badge">E1</div>
+        <div class="e-nm">Comprometimento liderança<small>cultura institucional</small></div>
+        <div class="e-sc">88</div>
+      </div>
+      <div class="e-bar"><div class="e-fl" style="width:88%"></div></div>
+      <div class="e-subs"><div class="e-sub">1.1 Tom líder<b>92</b></div><div class="e-sub">1.2 Política<b>84</b></div></div>
+    </div>
+    <div class="eixo e2">
+      <div class="e-head">
+        <div class="e-badge">E2</div>
+        <div class="e-nm">Análise de risco<small>mapear + mitigar</small></div>
+        <div class="e-sc">78</div>
+      </div>
+      <div class="e-bar"><div class="e-fl" style="width:78%"></div></div>
+      <div class="e-subs"><div class="e-sub">2.1 Mapa<b>82</b></div><div class="e-sub">2.2 Mitigar<b>74</b></div></div>
+    </div>
+    <div class="eixo e3">
+      <div class="e-head">
+        <div class="e-badge">E3</div>
+        <div class="e-nm">Estruturação<small>POPs + responsabilidades</small></div>
+        <div class="e-sc">86</div>
+      </div>
+      <div class="e-bar"><div class="e-fl" style="width:86%"></div></div>
+      <div class="e-subs"><div class="e-sub">3.1 POPs<b>88</b></div><div class="e-sub">3.2 RACI<b>84</b></div></div>
+    </div>
+    <div class="eixo e4">
+      <div class="e-head">
+        <div class="e-badge">E4</div>
+        <div class="e-nm">Monitoramento<small>auditoria + indicadores</small></div>
+        <div class="e-sc">76</div>
+      </div>
+      <div class="e-bar"><div class="e-fl" style="width:76%"></div></div>
+      <div class="e-subs"><div class="e-sub">4.1 Audit<b>72</b></div><div class="e-sub">4.2 GDA<b>80</b></div></div>
+    </div>
+  </div>
+
+  <h2 class="sec">Roadmap · fechar gap 82→92</h2>
+  <div class="rm-grid">
+    <div class="rm-card">
+      <h4>Curto · 6 meses</h4>
+      <ul><li>9 POPs restantes (26/35)</li><li>Auditoria mensal DA-066</li><li>Multi-IA gratuita produção</li><li>Encerramento AADP 2026</li></ul>
+    </div>
+    <div class="rm-card">
+      <h4>Médio · 12 meses</h4>
+      <ul><li>16 camadas BI completas</li><li>Sentinela Legal DOU/BGPM</li><li>Memory Bank RAG</li><li>AppSheet mobile</li></ul>
+    </div>
+    <div class="rm-card">
+      <h4>Longo · 18 meses</h4>
+      <ul><li>Score ≥ 92 sustentado</li><li>BigQuery warehouse</li><li>Cloud Functions event-driven</li><li>Benchmark 3 batalhões</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAB · AADP -->
+<div class="tab-content" id="t-aadp">
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sv">42%</div><div class="sl">do ciclo</div></div>
+    <div class="stat-cell g"><div class="sv">254</div><div class="sl">no ciclo</div></div>
+    <div class="stat-cell o"><div class="sv">12</div><div class="sl">divergências</div></div>
+  </div>
+
+  <h2 class="sec">Cronograma · ciclo 2026</h2>
+  <div class="tl-card">
+    <div class="tl-track"><div class="tl-fill"></div><div class="tl-today"></div></div>
+    <div class="tl-labels"><span>Set/25</span><span class="now">Hoje · 42%</span><span>Ago/26</span></div>
+    <div class="tl-stages">
+      <div class="tl-stage done"><div class="ts-st">✓</div><div class="ts-info"><div class="ts-nm">Auto-avaliação</div><div class="ts-meta">Out/2025 · 254/254</div></div></div>
+      <div class="tl-stage done"><div class="ts-st">✓</div><div class="ts-info"><div class="ts-nm">Avaliação chefias</div><div class="ts-meta">Nov/2025 · 248/254</div></div></div>
+      <div class="tl-stage cur"><div class="ts-st">3</div><div class="ts-info"><div class="ts-nm">Revisão consolidada</div><div class="ts-meta">Mai/2026 · em curso</div></div></div>
+      <div class="tl-stage fut"><div class="ts-st">4</div><div class="ts-info"><div class="ts-nm">Período de recursos</div><div class="ts-meta">Jun/2026 · 15 dias</div></div></div>
+      <div class="tl-stage fut"><div class="ts-st">5</div><div class="ts-info"><div class="ts-nm">Análise recursos</div><div class="ts-meta">Jul/2026 · Comissão</div></div></div>
+      <div class="tl-stage fut"><div class="ts-st">6</div><div class="ts-info"><div class="ts-nm">Homologação final</div><div class="ts-meta">15/Ago/2026 · BGPM</div></div></div>
+    </div>
+  </div>
+
+  <h2 class="sec">Distribuição · 254 militares</h2>
+  <div class="dist-card">
+    <div class="dist-row"><div class="lb">Validado OK</div><div class="ba"><div class="fl" style="width:72%;background:linear-gradient(90deg,var(--green),var(--greenL))"><span class="nm">183</span></div></div><div class="pc">72%</div></div>
+    <div class="dist-row"><div class="lb">Com ressalva</div><div class="ba"><div class="fl" style="width:18%;background:linear-gradient(90deg,var(--blue),var(--blueL))"><span class="nm">46</span></div></div><div class="pc">18%</div></div>
+    <div class="dist-row"><div class="lb">Divergência</div><div class="ba"><div class="fl" style="width:5%;background:linear-gradient(90deg,var(--orange),var(--orangeL))"><span class="nm">12</span></div></div><div class="pc">5%</div></div>
+    <div class="dist-row"><div class="lb">Reavaliação</div><div class="ba"><div class="fl" style="width:3%;background:linear-gradient(90deg,var(--red),var(--redL))"><span class="nm">8</span></div></div><div class="pc">3%</div></div>
+    <div class="dist-row"><div class="lb">Aguarda chefia</div><div class="ba"><div class="fl" style="width:2%;background:linear-gradient(90deg,var(--red),var(--redL))"><span class="nm">5</span></div></div><div class="pc">2%</div></div>
+  </div>
+</div>
+
+<a class="back-link" href="./index.html" target="_blank" rel="noopener">‹ Voltar ao Hub Mobile</a>
+
+<div class="foot">
+  <div><span class="gold">Gestão Estratégica · SADM 56 BPM</span></div>
+  <div>Compliance + AADP consolidado · Onda 28+</div>
+  <div style="margin-top:6px;color:var(--dim)">Cap. Caldeira · Itajubá-MG</div>
+</div>
+
+<script>
+(function(){
+  // TABS
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('t-'+b.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  // CLOCK
+  const dias=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+  function clk(){
+    const d=new Date();
+    document.getElementById('tbTime').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('tbDate').textContent=dias[d.getDay()]+' '+d.getDate()+'/'+String(d.getMonth()+1).padStart(2,'0');
+  }
+  setInterval(clk,1000);clk();
+})();
+</script>
+
+<div class="live-stamp" style="margin:18px 4px 8px"><span class="live-dot"></span><span>Atualizado em <b id="liveStamp">--:--:--</b> · agora</span></div>
+<script>(function(){function s(){var d=new Date();document.getElementById("liveStamp").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")}setInterval(s,1000);s();})();</script>
+</body>
+</html>

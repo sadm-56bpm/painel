@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E16">
+<title>Operacional Mobile · SADM 56 BPM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16;--bg2:#0D121C;--bg3:#131A28;--bg4:#1A2336;--bg5:#232E47;
+  --line:#1F2A40;--line2:#2E3B58;--line3:#3A4A6E;
+  --txt:#E8EBF0;--txt2:#C5CBD8;--mut:#8A95AC;--dim:#5A6478;
+  --gold:#C9A348;--goldL:#E8C77A;--goldD:#8B6F2E;
+  --blue:#4A8AD8;--blueL:#7BB4E8;
+  --green:#4ABF7A;--greenL:#8FD9A8;
+  --purple:#8A5AD8;--purpleL:#B894E8;
+  --red:#C84141;--redL:#E89090;
+  --orange:#D88838;--orangeL:#F0B070;
+  --cyan:#3AB5C8;--cyanL:#7BD0DC;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;width:100vw;overflow-x:hidden}
+body{padding:max(env(safe-area-inset-top),14px) 12px max(env(safe-area-inset-bottom),18px)}
+
+.topbar{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;margin-bottom:12px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--line2);border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.4);position:relative;overflow:hidden}
+.topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--goldL),var(--gold))}
+.tb-crest{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--bg4),var(--bg5));border:2px solid var(--gold);display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:14px;color:var(--gold)}
+.tb-title{font-family:'IBM Plex Serif',serif;font-size:13px;font-weight:600;color:var(--gold);line-height:1.1}
+.tb-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mut);letter-spacing:0.8px;margin-top:2px;text-transform:uppercase}
+.tb-clock{text-align:right;font-family:'IBM Plex Mono',monospace}
+.tb-time{font-size:16px;font-weight:700;color:var(--gold);line-height:1}
+.tb-date{font-size:8.5px;color:var(--mut);margin-top:2px}
+
+/* ALERT BAR */
+.alerts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.alert{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:10px;padding:10px 6px;text-align:center;position:relative;overflow:hidden}
+.alert::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc,var(--blue))}
+.alert.crit{--acc:var(--red)}.alert.warn{--acc:var(--orange)}.alert.info{--acc:var(--blue)}.alert.ok{--acc:var(--green)}
+.alert .v{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--acc,var(--gold));line-height:1}
+.alert .l{font-size:8.5px;color:var(--mut);margin-top:4px;text-transform:uppercase;letter-spacing:0.3px;line-height:1.2}
+
+/* TABS */
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:14px;background:var(--bg3);border:1px solid var(--line2);border-radius:12px;padding:4px}
+.tab-btn{background:transparent;border:none;color:var(--mut);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:9px 4px;border-radius:8px;cursor:pointer;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;transition:all 0.2s}
+.tab-btn.active{background:linear-gradient(135deg,var(--gold),var(--goldD));color:var(--bg);box-shadow:0 4px 14px rgba(201,163,72,0.3)}
+
+.tab-content{display:none}
+.tab-content.active{display:block;animation:slideIn 0.35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+h2.sec{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin:14px 0 10px;display:flex;align-items:center;gap:10px}
+h2.sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+/* COUNTDOWNS */
+.cd-list{display:grid;gap:10px}
+.cd{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:14px;padding:14px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,0.35)
+}
+.cd::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc,var(--blue))}
+.cd.crit{--acc:var(--red)}
+.cd.warn{--acc:var(--orange)}
+.cd.info{--acc:var(--blue)}
+.cd.ok{--acc:var(--green)}
+.cd .cd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.cd .cd-ttl{font-size:13px;font-weight:600;color:var(--txt);line-height:1.3;flex:1}
+.cd .cd-pri{font-family:'IBM Plex Mono',monospace;font-size:8.5px;padding:3px 7px;border-radius:4px;background:var(--acc,var(--blue));color:var(--bg);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;flex-shrink:0}
+.cd .cd-timer{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:6px 0}
+.cd .cd-cell{background:var(--bg4);border:1px solid var(--line);border-radius:6px;padding:8px 2px;text-align:center;font-family:'IBM Plex Mono',monospace}
+.cd .cd-cell .cv{font-size:18px;font-weight:700;color:var(--acc,var(--gold));line-height:1}
+.cd .cd-cell .cl{font-size:8px;color:var(--mut);text-transform:uppercase;margin-top:2px;letter-spacing:0.5px}
+.cd .cd-meta{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+.cd .cd-meta b{color:var(--txt2);font-weight:500}
+
+/* ANIVERSÁRIOS */
+.birth-hero{background:linear-gradient(135deg,var(--gold),var(--goldD));color:var(--bg);border-radius:16px;padding:20px;margin-bottom:12px;text-align:center;box-shadow:0 8px 24px rgba(201,163,72,0.3);position:relative;overflow:hidden}
+.birth-hero::after{content:'';position:absolute;top:0;right:-30%;width:60%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.12) 50%,transparent 60%);animation:shimmer 6s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%) translateY(-50%) rotate(20deg)}100%{transform:translateX(200%) translateY(-50%) rotate(20deg)}}
+.birth-hero .b-day{font-family:'IBM Plex Mono',monospace;font-size:54px;font-weight:700;line-height:1;letter-spacing:-1px;position:relative;z-index:1}
+.birth-hero .b-month{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:3px;margin-top:6px;position:relative;z-index:1}
+.birth-hero .b-label{font-family:'IBM Plex Mono',monospace;font-size:9px;margin-top:16px;opacity:0.75;text-transform:uppercase;letter-spacing:1px;position:relative;z-index:1}
+.birth-hero .b-count{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:700;margin-top:6px;position:relative;z-index:1}
+.birth-hero .b-cl{font-size:11px;font-weight:500;position:relative;z-index:1;margin-top:2px}
+.birth-list{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:14px;padding:14px}
+.birth-list h3{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.birth-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px}
+.birth-row:last-child{border-bottom:none}
+.birth-row .d{color:var(--blueL);font-weight:600;min-width:40px}
+.birth-row .n{font-family:'IBM Plex Sans',sans-serif;color:var(--txt2);line-height:1.3}
+.birth-row .r{font-size:9.5px;color:var(--mut)}
+
+/* PERFORMANCE */
+.perf-list{display:grid;gap:8px}
+.perf-row{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:12px;padding:12px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.perf-row .pr-ico{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:13px;color:var(--bg);flex-shrink:0}
+.perf-row.chf .pr-ico{background:linear-gradient(135deg,var(--gold),var(--goldD))}
+.perf-row.f1 .pr-ico{background:linear-gradient(135deg,var(--blueL),var(--blue))}
+.perf-row.f2 .pr-ico{background:linear-gradient(135deg,var(--greenL),var(--green))}
+.perf-row.f3 .pr-ico{background:linear-gradient(135deg,var(--purpleL),var(--purple))}
+.perf-row .pr-info .pr-nm{font-size:12.5px;font-weight:600;color:var(--txt)}
+.perf-row .pr-info .pr-st{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);text-transform:uppercase;margin-top:2px;letter-spacing:0.5px}
+.perf-row .pr-sla{text-align:right}
+.perf-row .pr-sla .pv{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700}
+.perf-row.f1 .pr-sla .pv{color:var(--orangeL)}
+.perf-row.chf .pr-sla .pv,.perf-row.f2 .pr-sla .pv,.perf-row.f3 .pr-sla .pv{color:var(--greenL)}
+.perf-row .pr-sla .pl{font-size:9px;color:var(--mut);font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
+
+.note{background:rgba(216,136,56,0.1);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:10px 12px;font-size:11px;color:var(--txt2);line-height:1.5;margin-top:10px}
+.note b{color:var(--orangeL);font-weight:600}
+
+/* NORMAS */
+.norma-list{display:grid;gap:8px}
+.norma{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:12px;padding:12px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+.norma .nd{text-align:center;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.norma .nd .nd-d{font-size:18px;font-weight:700;color:var(--gold);line-height:1}
+.norma .nd .nd-m{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.norma .ni .ni-nm{font-size:12px;font-weight:600;color:var(--txt);line-height:1.3}
+.norma .ni .ni-d{font-size:10.5px;color:var(--txt2);line-height:1.45;margin-top:3px}
+.norma .nimp{font-family:'IBM Plex Mono',monospace;font-size:8.5px;padding:3px 7px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0}
+.nimp.h{background:rgba(200,65,65,0.15);color:var(--redL);border:1px solid rgba(200,65,65,0.3)}
+.nimp.m{background:rgba(216,136,56,0.15);color:var(--orangeL);border:1px solid rgba(216,136,56,0.3)}
+.nimp.l{background:rgba(74,138,216,0.15);color:var(--blueL);border:1px solid rgba(74,138,216,0.3)}
+
+.back-link{display:block;text-align:center;margin-top:14px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--blueL);padding:10px;background:var(--bg3);border:1px solid var(--line2);border-radius:10px;letter-spacing:0.5px;text-transform:uppercase}
+.back-link:active{background:var(--bg4)}
+.foot{margin-top:18px;padding:14px 8px 0;border-top:1px solid var(--line2);text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);letter-spacing:0.5px;line-height:1.7}
+.foot .gold{color:var(--gold)}
+/* === PREMIUM POLISH · aurora + glow + live stamp === */
+.premium-aurora{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden;opacity:0.45}
+.premium-aurora::before,.premium-aurora::after{content:"";position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);animation:auroraFlow 22s ease-in-out infinite}
+.premium-aurora::before{background:radial-gradient(circle,rgba(201,163,72,0.18),transparent 60%);top:-200px;left:-200px}
+.premium-aurora::after{background:radial-gradient(circle,rgba(74,138,216,0.12),transparent 60%);bottom:-200px;right:-200px;animation-delay:-11s}
+@keyframes auroraFlow{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,40px) scale(0.95)}}
+.live-stamp{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;background:rgba(74,191,122,0.08);border:1px solid rgba(74,191,122,0.25);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--greenL);letter-spacing:0.8px;text-transform:uppercase}
+.live-stamp .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:livePulse 1.4s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.live-stamp b{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+<div class="premium-aurora"></div>
+
+<div class="topbar">
+  <div class="tb-crest">56</div>
+  <div>
+    <div class="tb-title">Operacional Live</div>
+    <div class="tb-sub">Prazos · Perform. · Aniv · Normas</div>
+  </div>
+  <div class="tb-clock">
+    <div class="tb-time" id="tbTime">--:--</div>
+    <div class="tb-date" id="tbDate">--</div>
+  </div>
+</div>
+
+<!-- ALERT BAR -->
+<div class="alerts">
+  <div class="alert crit"><div class="v">2</div><div class="l">Críticos</div></div>
+  <div class="alert warn"><div class="v">5</div><div class="l">Atenção</div></div>
+  <div class="alert info"><div class="v" id="bornCount">—</div><div class="l">Aniv. hoje</div></div>
+  <div class="alert ok"><div class="v">37</div><div class="l">No Calendar</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="prazos">⌚ Prazos</button>
+  <button class="tab-btn" data-tab="perf">📊 Performance</button>
+  <button class="tab-btn" data-tab="aniv">🎂 Aniv</button>
+</div>
+
+<!-- TAB · PRAZOS -->
+<div class="tab-content active" id="t-prazos">
+  <h2 class="sec">Countdowns ao vivo · refresh 1s</h2>
+  <div class="cd-list">
+    <div class="cd crit">
+      <div class="cd-top"><div class="cd-ttl">Folha pagamento maio/2026</div><div class="cd-pri">CRÍT</div></div>
+      <div class="cd-timer" data-deadline="2026-05-25T23:59:59">
+        <div class="cd-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+        <div class="cd-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+        <div class="cd-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+        <div class="cd-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+      </div>
+      <div class="cd-meta"><span>F3 conduz</span><b>25/Mai · 23h59</b></div>
+    </div>
+
+    <div class="cd crit">
+      <div class="cd-top"><div class="cd-ttl">AADP · divergências > 20%</div><div class="cd-pri">CRÍT</div></div>
+      <div class="cd-timer" data-deadline="2026-05-20T23:59:59">
+        <div class="cd-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+        <div class="cd-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+        <div class="cd-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+        <div class="cd-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+      </div>
+      <div class="cd-meta"><span>F1 + Chefia</span><b>12 itens</b></div>
+    </div>
+
+    <div class="cd warn">
+      <div class="cd-top"><div class="cd-ttl">AADP · abertura recursos</div><div class="cd-pri">ATEN</div></div>
+      <div class="cd-timer" data-deadline="2026-06-01T08:00:00">
+        <div class="cd-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+        <div class="cd-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+        <div class="cd-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+        <div class="cd-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+      </div>
+      <div class="cd-meta"><span>F1 protocoliza</span><b>01/Jun · 08h</b></div>
+    </div>
+
+    <div class="cd warn">
+      <div class="cd-top"><div class="cd-ttl">Aux-Alim · prestação contas</div><div class="cd-pri">ATEN</div></div>
+      <div class="cd-timer" data-deadline="2026-06-10T17:00:00">
+        <div class="cd-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+        <div class="cd-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+        <div class="cd-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+        <div class="cd-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+      </div>
+      <div class="cd-meta"><span>F3 · Dec.49.006</span><b>10/Jun</b></div>
+    </div>
+
+    <div class="cd info">
+      <div class="cd-top"><div class="cd-ttl">Audit DA-066 · privacidade</div><div class="cd-pri">PROG</div></div>
+      <div class="cd-timer" data-deadline="2026-06-02T09:00:00">
+        <div class="cd-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+        <div class="cd-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+        <div class="cd-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+        <div class="cd-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+      </div>
+      <div class="cd-meta"><span>Chefia · mensal</span><b>02/Jun · 09h</b></div>
+    </div>
+  </div>
+
+  <h2 class="sec">Normas recentes · DOU · BGPM · IO-MG</h2>
+  <div class="norma-list">
+    <div class="norma">
+      <div class="nd"><div class="nd-d">14</div><div class="nd-m">Mai</div></div>
+      <div class="ni"><div class="ni-nm">Res. 5.461/2026 PMMG · TCAF</div><div class="ni-d">Atualiza protocolo TCAF · novo cronograma semestral.</div></div>
+      <div class="nimp h">★</div>
+    </div>
+    <div class="norma">
+      <div class="nd"><div class="nd-d">12</div><div class="nd-m">Mai</div></div>
+      <div class="ni"><div class="ni-nm">Dec. 49.118/2026 MG</div><div class="ni-d">Reajuste vencimento 3,8% · vigência 01/Jun.</div></div>
+      <div class="nimp h">★</div>
+    </div>
+    <div class="norma">
+      <div class="nd"><div class="nd-d">08</div><div class="nd-m">Mai</div></div>
+      <div class="ni"><div class="ni-nm">Memo 12/2026 DCO · MIV/2025</div><div class="ni-d">Padronização cabeçalho documental · vigência imediata.</div></div>
+      <div class="nimp m">M</div>
+    </div>
+    <div class="norma">
+      <div class="nd"><div class="nd-d">02</div><div class="nd-m">Mai</div></div>
+      <div class="ni"><div class="ni-nm">Lei 24.821/2026 · cumulativo</div><div class="ni-d">Atualiza regime cumulativo · impacta quinquênio.</div></div>
+      <div class="nimp m">M</div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB · PERFORMANCE -->
+<div class="tab-content" id="t-perf">
+  <h2 class="sec">Performance · maio/2026</h2>
+  <div class="perf-list">
+    <div class="perf-row chf">
+      <div class="pr-ico">C</div>
+      <div class="pr-info"><div class="pr-nm">Chefia</div><div class="pr-st">32 concl · 3,1d médio · 1 reab</div></div>
+      <div class="pr-sla"><div class="pv">94%</div><div class="pl">SLA</div></div>
+    </div>
+    <div class="perf-row f1">
+      <div class="pr-ico">F1</div>
+      <div class="pr-info"><div class="pr-nm">F1 · Movimentação</div><div class="pr-st">48 concl · 6,8d médio · 3 reab</div></div>
+      <div class="pr-sla"><div class="pv">78%</div><div class="pl">SLA · ⚠</div></div>
+    </div>
+    <div class="perf-row f2">
+      <div class="pr-ico">F2</div>
+      <div class="pr-info"><div class="pr-nm">F2 · Direitos</div><div class="pr-st">28 concl · 4,5d médio · 0 reab</div></div>
+      <div class="pr-sla"><div class="pv">88%</div><div class="pl">SLA</div></div>
+    </div>
+    <div class="perf-row f3">
+      <div class="pr-ico">F3</div>
+      <div class="pr-info"><div class="pr-nm">F3 · Folha</div><div class="pr-st">20 concl · 5,2d médio · 1 reab</div></div>
+      <div class="pr-sla"><div class="pv">85%</div><div class="pl">SLA</div></div>
+    </div>
+  </div>
+
+  <div class="note">⚠ <b>F1 com 76% de carga relativa</b> · próximo do limite 85%. Considerar rebalanceamento se persistir 3 semanas. σ carga = 3,3 (meta ≤ 1,5).</div>
+
+  <h2 class="sec">Top 5 processos · maio</h2>
+  <div class="cd-list">
+    <div class="cd info"><div class="cd-top"><div class="cd-ttl">1 · ERF · F1 · 22 vol</div><div class="cd-pri">86%</div></div></div>
+    <div class="cd ok"><div class="cd-top"><div class="cd-ttl">2 · Folha · F3 · 1 (251)</div><div class="cd-pri">100%</div></div></div>
+    <div class="cd info"><div class="cd-top"><div class="cd-ttl">3 · Diária · F3 · 18 vol</div><div class="cd-pri">94%</div></div></div>
+    <div class="cd ok"><div class="cd-top"><div class="cd-ttl">4 · Aux. Alim ★ · F3 · 1/mês</div><div class="cd-pri">100%</div></div></div>
+    <div class="cd warn"><div class="cd-top"><div class="cd-ttl">5 · Férias · F2 · 14 vol</div><div class="cd-pri">79%</div></div></div>
+  </div>
+</div>
+
+<!-- TAB · ANIVERSÁRIOS -->
+<div class="tab-content" id="t-aniv">
+  <div class="birth-hero">
+    <div class="b-day" id="bDay">--</div>
+    <div class="b-month" id="bMonth">--</div>
+    <div class="b-label">Aniversariantes do dia</div>
+    <div class="b-count">—</div>
+    <div class="b-cl">Pendente · Baliza</div>
+  </div>
+
+  <h2 class="sec">Próximos 7 dias</h2>
+  <div class="birth-list">
+    <h3>254 militares · pendente enriquecimento</h3>
+    <div class="birth-row"><div class="d">+1d</div><div class="n">Adicionar coluna data_nascimento à Baliza</div><div class="r">F1</div></div>
+    <div class="birth-row"><div class="d">+2d</div><div class="n">Re-rodar calendar_popular_aniversarios()</div><div class="r">~2min</div></div>
+    <div class="birth-row"><div class="d">+3d</div><div class="n">251 eventos criados · cor flamingo</div><div class="r">Anual</div></div>
+    <div class="birth-row"><div class="d">+4d</div><div class="n">Notificação 7d antes · Chefia + militar</div><div class="r">Auto</div></div>
+    <div class="birth-row"><div class="d">+5d</div><div class="n">Card destacado neste painel · refresh 00h</div><div class="r">Live</div></div>
+    <div class="birth-row"><div class="d">+6d</div><div class="n">Auto-mensagem institucional opcional</div><div class="r">Config</div></div>
+    <div class="birth-row"><div class="d">+7d</div><div class="n">Integração Programa Integridade · clima</div><div class="r">Eixo 1</div></div>
+  </div>
+</div>
+
+<a class="back-link" href="./index.html" target="_blank" rel="noopener">‹ Voltar ao Hub Mobile</a>
+
+<div class="foot">
+  <div><span class="gold">Operacional Live · day-to-day</span></div>
+  <div>Sentinela + Performance + Aniv · Onda 28+</div>
+  <div style="margin-top:6px;color:var(--dim)">Cap. Caldeira · Itajubá-MG</div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('t-'+b.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  const dias=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  function clk(){
+    const d=new Date();
+    document.getElementById('tbTime').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('tbDate').textContent=dias[d.getDay()]+' '+d.getDate()+'/'+String(d.getMonth()+1).padStart(2,'0');
+    document.getElementById('bDay').textContent=String(d.getDate()).padStart(2,'0');
+    document.getElementById('bMonth').textContent=meses[d.getMonth()];
+  }
+  setInterval(clk,1000);clk();
+
+  function cd(){
+    document.querySelectorAll('.cd-timer').forEach(t=>{
+      const dl=new Date(t.dataset.deadline);
+      const diff=Math.max(0,dl-new Date());
+      const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+      t.querySelector('.c-d').textContent=String(d).padStart(2,'0');
+      t.querySelector('.c-h').textContent=String(h).padStart(2,'0');
+      t.querySelector('.c-m').textContent=String(m).padStart(2,'0');
+      t.querySelector('.c-s').textContent=String(s).padStart(2,'0');
+    });
+  }
+  setInterval(cd,1000);cd();
+})();
+</script>
+
+<div class="live-stamp" style="margin:18px 4px 8px"><span class="live-dot"></span><span>Atualizado em <b id="liveStamp">--:--:--</b> · agora</span></div>
+<script>(function(){function s(){var d=new Date();document.getElementById("liveStamp").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")}setInterval(s,1000);s();})();</script>
+</body>
+</html>

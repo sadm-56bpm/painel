@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E16">
+<title>TV Mural Mobile · SADM 56 BPM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16;--bg2:#0D121C;--bg3:#131A28;--bg4:#1A2336;--bg5:#232E47;
+  --line:#1F2A40;--line2:#2E3B58;--line3:#3A4A6E;
+  --txt:#E8EBF0;--txt2:#C5CBD8;--mut:#8A95AC;--dim:#5A6478;
+  --gold:#C9A348;--goldL:#E8C77A;--goldD:#8B6F2E;
+  --blue:#4A8AD8;--blueL:#7BB4E8;
+  --green:#4ABF7A;--greenL:#8FD9A8;
+  --purple:#8A5AD8;--purpleL:#B894E8;
+  --red:#C84141;--redL:#E89090;
+  --orange:#D88838;--orangeL:#F0B070;
+  --cyan:#3AB5C8;--cyanL:#7BD0DC;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;width:100vw;overflow-x:hidden;touch-action:pan-y}
+body{padding:14px 12px max(env(safe-area-inset-bottom),18px);padding-top:max(env(safe-area-inset-top),14px)}
+
+/* === TOP BAR FIXA === */
+.topbar{
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  padding:8px 12px;margin-bottom:12px;
+  background:linear-gradient(135deg,var(--bg2),var(--bg3));
+  border:1px solid var(--line2);border-radius:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.4);
+  position:relative;overflow:hidden
+}
+.topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--goldL),var(--gold))}
+.tb-crest{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--bg4),var(--bg5));border:2px solid var(--gold);display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:14px;color:var(--gold)}
+.tb-title{font-family:'IBM Plex Serif',serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:0.3px;line-height:1.1}
+.tb-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mut);letter-spacing:0.8px;margin-top:2px;text-transform:uppercase}
+.tb-clock{text-align:right;font-family:'IBM Plex Mono',monospace}
+.tb-time{font-size:18px;font-weight:700;color:var(--gold);line-height:1;letter-spacing:1px}
+.tb-date{font-size:8.5px;color:var(--mut);margin-top:2px;letter-spacing:0.5px}
+
+/* === PROGRESS BAR + DOTS === */
+.prog-wrap{margin-bottom:10px}
+.prog-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.prog-bar .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldL));border-radius:2px;width:0;transition:width 0.3s linear;box-shadow:0 0 8px var(--gold)}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all 0.3s}
+.dot.active{background:var(--gold);width:22px;border-radius:3px}
+
+/* === STAGE === */
+.stage{position:relative;min-height:calc(100vh - 200px);min-height:calc(100dvh - 200px)}
+.panel{position:absolute;inset:0;opacity:0;transform:translateX(20px);transition:opacity 0.5s,transform 0.5s cubic-bezier(.2,.8,.2,1);pointer-events:none;padding-bottom:80px}
+.panel.active{opacity:1;transform:translateX(0);pointer-events:auto;position:relative}
+.panel h2{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.panel h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.panel h1{font-family:'IBM Plex Serif',serif;font-size:22px;font-weight:600;color:var(--txt);line-height:1.2;margin-bottom:18px}
+
+/* === PAINEL 1 · ESTADO KPI BIG === */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi-big{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:16px;padding:18px;
+  position:relative;overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4)
+}
+.kpi-big::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--acc,var(--gold)),transparent)}
+.kpi-big .v{font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:700;color:var(--acc,var(--gold));line-height:1;letter-spacing:-1px}
+.kpi-big .l{font-size:11px;color:var(--txt2);margin-top:8px;font-weight:500}
+.kpi-big .d{font-size:9.5px;color:var(--mut);font-family:'IBM Plex Mono',monospace;margin-top:3px;letter-spacing:0.5px}
+.kpi-big.b{--acc:var(--blueL)}.kpi-big.g{--acc:var(--greenL)}.kpi-big.p{--acc:var(--purpleL)}.kpi-big.r{--acc:var(--redL)}.kpi-big.o{--acc:var(--orangeL)}.kpi-big.c{--acc:var(--cyanL)}
+
+/* === PAINEL 2 · OPERADORES === */
+.op-list{display:grid;gap:10px}
+.op-row{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:14px;padding:14px;
+  display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center
+}
+.op-row .ico{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:16px;color:var(--bg);flex-shrink:0}
+.op-row.chf .ico{background:linear-gradient(135deg,var(--gold),var(--goldD))}
+.op-row.f1 .ico{background:linear-gradient(135deg,var(--blueL),var(--blue))}
+.op-row.f2 .ico{background:linear-gradient(135deg,var(--greenL),var(--green))}
+.op-row.f3 .ico{background:linear-gradient(135deg,var(--purpleL),var(--purple))}
+.op-row .nm{font-size:13.5px;font-weight:600;color:var(--txt)}
+.op-row .ds{font-size:11px;color:var(--mut);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.op-row .rs{font-size:11.5px;color:var(--txt2);line-height:1.4;margin-top:6px}
+
+/* === PAINEL 3 · BLOCOS GRID === */
+.blocos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bloco-mini{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:12px;padding:12px 10px;
+  position:relative
+}
+.bloco-mini::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blueL),transparent)}
+.bloco-mini.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.bloco-mini .num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px}
+.bloco-mini .nm{font-size:12px;font-weight:600;color:var(--txt);line-height:1.2;margin-top:3px}
+.bloco-mini .ct{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--gold);font-weight:700;margin-top:6px}
+
+/* === PAINEL 4 · COMPLIANCE GAUGE === */
+.gauge-wrap{display:flex;justify-content:center;margin-bottom:16px}
+.gauge-svg{width:200px;height:200px}
+.gauge-center{position:relative}
+.gauge-overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.gauge-overlay .v{font-family:'IBM Plex Mono',monospace;font-size:42px;font-weight:700;color:var(--gold);line-height:1}
+.gauge-overlay .l{font-size:9px;color:var(--mut);font-family:'IBM Plex Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.gauge-overlay .t{font-size:10px;color:var(--greenL);font-family:'IBM Plex Mono',monospace;margin-top:4px}
+.eixos-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.eixo-mini{background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:10px}
+.eixo-mini .e-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.eixo-mini .e-nm{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace}
+.eixo-mini .e-v{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:var(--gold)}
+.eixo-mini .e-bar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.eixo-mini .e-fl{height:100%;border-radius:3px}
+.eixo-mini.e1 .e-fl{background:linear-gradient(90deg,var(--green),var(--greenL))}
+.eixo-mini.e2 .e-fl{background:linear-gradient(90deg,var(--orange),var(--orangeL))}
+.eixo-mini.e3 .e-fl{background:linear-gradient(90deg,var(--blue),var(--blueL))}
+.eixo-mini.e4 .e-fl{background:linear-gradient(90deg,var(--purple),var(--purpleL))}
+
+/* === PAINEL 5 · AADP CRONOGRAMA === */
+.aadp-progress{margin-bottom:14px}
+.aadp-progress .a-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:6px;position:relative}
+.aadp-progress .a-bar .a-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--greenL));border-radius:3px;width:42%}
+.aadp-progress .a-bar .a-today{position:absolute;top:-5px;left:42%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:var(--gold);border:3px solid var(--bg);box-shadow:0 0 12px var(--gold)}
+.aadp-progress .a-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);display:flex;justify-content:space-between;letter-spacing:0.5px}
+.aadp-stages{display:grid;gap:8px}
+.aadp-stage{background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:12px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:12px}
+.aadp-stage.done{border-color:var(--green)}
+.aadp-stage.cur{border-color:var(--gold);background:linear-gradient(180deg,rgba(201,163,72,0.08),var(--bg3))}
+.aadp-stage.fut{opacity:0.6}
+.aadp-stage .st{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.aadp-stage.done .st{background:var(--green);color:var(--bg)}
+.aadp-stage.cur .st{background:var(--gold);color:var(--bg);animation:pulse 2s infinite}
+.aadp-stage.fut .st{background:var(--bg4);color:var(--mut);border:1px solid var(--line2)}
+.aadp-stage .n{font-size:13px;font-weight:600;color:var(--txt)}
+.aadp-stage .w{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);text-transform:uppercase}
+
+/* === PAINEL 6 · PRAZOS countdown === */
+.countdowns{display:grid;gap:10px}
+.cdown{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:14px;padding:14px;
+  position:relative;overflow:hidden
+}
+.cdown::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc,var(--blue))}
+.cdown.crit{--acc:var(--red)}
+.cdown.warn{--acc:var(--orange)}
+.cdown.info{--acc:var(--blue)}
+.cdown .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.cdown .c-ttl{font-size:12.5px;font-weight:600;color:var(--txt);line-height:1.3;flex:1}
+.cdown .c-pri{font-family:'IBM Plex Mono',monospace;font-size:8.5px;padding:3px 7px;border-radius:4px;background:var(--acc,var(--blue));color:var(--bg);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;flex-shrink:0}
+.cdown .c-timer{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.cdown .c-cell{background:var(--bg4);border:1px solid var(--line);border-radius:6px;padding:6px 2px;text-align:center;font-family:'IBM Plex Mono',monospace}
+.cdown .c-cell .cv{font-size:16px;font-weight:700;color:var(--acc,var(--gold));line-height:1}
+.cdown .c-cell .cl{font-size:8px;color:var(--mut);text-transform:uppercase;margin-top:2px;letter-spacing:0.5px}
+.cdown .c-meta{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);margin-top:8px;display:flex;justify-content:space-between;padding-top:6px;border-top:1px solid var(--line)}
+
+/* === PAINEL 7 · IDENTIDADE === */
+.id-hero{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--line2);border-radius:18px;padding:24px 18px;text-align:center;margin-bottom:14px}
+.id-hero .crest{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--bg4),var(--bg5));border:2.5px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-family:'IBM Plex Serif',serif;font-size:34px;font-weight:700;margin:0 auto 14px;box-shadow:0 0 32px rgba(201,163,72,0.35)}
+.id-hero .city{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.id-hero .quote{font-family:'IBM Plex Serif',serif;font-style:italic;font-size:12px;color:var(--txt2);line-height:1.6;margin-top:14px}
+.vals{display:grid;gap:8px}
+.val{background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:12px}
+.val .vi{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px}
+.val .vn{font-size:13px;font-weight:600;color:var(--txt);margin-top:3px}
+.val .vd{font-size:11px;color:var(--txt2);line-height:1.5;margin-top:4px}
+
+/* === NAV BUTTONS FIXED BOTTOM === */
+.nav-fixed{
+  position:fixed;bottom:0;left:0;right:0;
+  padding:10px 14px max(env(safe-area-inset-bottom),14px);
+  background:linear-gradient(0deg,var(--bg) 60%,transparent);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+  z-index:100
+}
+.nav-btn{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:10px;padding:10px;
+  color:var(--txt);font-family:'IBM Plex Mono',monospace;font-size:11px;
+  text-align:center;cursor:pointer;
+  transition:all 0.15s;
+  font-weight:600;letter-spacing:0.5px;text-transform:uppercase
+}
+.nav-btn:active{transform:scale(0.95);background:var(--bg4)}
+.nav-btn.mid{background:linear-gradient(135deg,var(--gold),var(--goldD));color:var(--bg);border-color:var(--gold);font-weight:700;box-shadow:0 4px 14px rgba(201,163,72,0.35)}
+
+/* === SWIPE HINT === */
+.swipe-hint{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1.5px;margin-top:8px;text-transform:uppercase;animation:fadeio 3s infinite}
+@keyframes fadeio{0%,100%{opacity:0.3}50%{opacity:0.8}}
+/* === PREMIUM POLISH · aurora + glow + live stamp === */
+.premium-aurora{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden;opacity:0.45}
+.premium-aurora::before,.premium-aurora::after{content:"";position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);animation:auroraFlow 22s ease-in-out infinite}
+.premium-aurora::before{background:radial-gradient(circle,rgba(201,163,72,0.18),transparent 60%);top:-200px;left:-200px}
+.premium-aurora::after{background:radial-gradient(circle,rgba(74,138,216,0.12),transparent 60%);bottom:-200px;right:-200px;animation-delay:-11s}
+@keyframes auroraFlow{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,40px) scale(0.95)}}
+.live-stamp{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;background:rgba(74,191,122,0.08);border:1px solid rgba(74,191,122,0.25);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--greenL);letter-spacing:0.8px;text-transform:uppercase}
+.live-stamp .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:livePulse 1.4s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.live-stamp b{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+<div class="premium-aurora"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-crest">56</div>
+  <div>
+    <div class="tb-title">SADM 56º BPM</div>
+    <div class="tb-sub" id="tbSub">Painel 1 / 7 · Estado</div>
+  </div>
+  <div class="tb-clock">
+    <div class="tb-time" id="tbTime">--:--:--</div>
+    <div class="tb-date" id="tbDate">--</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-wrap">
+  <div class="prog-bar"><div class="fill" id="prog"></div></div>
+  <div class="dots" id="dots"></div>
+</div>
+
+<!-- STAGE -->
+<div class="stage">
+
+  <!-- PAINEL 1 · ESTADO -->
+  <div class="panel active" data-p="0">
+    <h2>Estado · números auditáveis</h2>
+    <h1>SADM em números</h1>
+    <div class="kpi-grid">
+      <div class="kpi-big"><div class="v">254</div><div class="l">Militares</div><div class="d">QPP · Baliza · DA-033</div></div>
+      <div class="kpi-big b"><div class="v">49.064</div><div class="l">Documentos</div><div class="d">20,3 GB · 10 blocos</div></div>
+      <div class="kpi-big g"><div class="v">70</div><div class="l">Decisões</div><div class="d">DA-001 → DA-070</div></div>
+      <div class="kpi-big p"><div class="v">35</div><div class="l">POPs canônicos</div><div class="d">Res. 4.843/2019</div></div>
+      <div class="kpi-big c"><div class="v">16</div><div class="l">Camadas BI</div><div class="d">8 desc · 8 pred</div></div>
+      <div class="kpi-big o"><div class="v">9</div><div class="l">Módulos GS</div><div class="d">5 triggers ativos</div></div>
+    </div>
+    <div class="swipe-hint">→ Deslize para o próximo</div>
+  </div>
+
+  <!-- PAINEL 2 · OPERADORES -->
+  <div class="panel" data-p="1">
+    <h2>4 Operadores · DA-029</h2>
+    <h1>Quem opera o sistema</h1>
+    <div class="op-list">
+      <div class="op-row chf">
+        <div class="ico">C</div>
+        <div>
+          <div class="nm">Chefia</div>
+          <div class="ds">Cap. Caldeira · acesso pleno</div>
+          <div class="rs">Coordenação · decisão · auditoria · ACESSO_RESERVADO · IA institucional</div>
+        </div>
+      </div>
+      <div class="op-row f1">
+        <div class="ico">F1</div>
+        <div>
+          <div class="nm">F1 · Movimentação</div>
+          <div class="ds">AADP · ERF · BI · 13 procs</div>
+          <div class="rs">Concursos · promoção · transferência · cursos · AADP · ERF</div>
+        </div>
+      </div>
+      <div class="op-row f2">
+        <div class="ico">F2</div>
+        <div>
+          <div class="nm">F2 · Quinquênio</div>
+          <div class="ds">Direitos · saúde · 12 procs</div>
+          <div class="rs">Quinquênio · férias · CTC · saúde · família · dependentes</div>
+        </div>
+      </div>
+      <div class="op-row f3">
+        <div class="ico">F3</div>
+        <div>
+          <div class="nm">F3 · Folha/Diária</div>
+          <div class="ds">Pagamento · 10 procs</div>
+          <div class="rs">Folha · diária · Aux. Alim. · arma · jornada · integridade</div>
+        </div>
+      </div>
+    </div>
+    <div class="swipe-hint">← Voltar · → Próximo</div>
+  </div>
+
+  <!-- PAINEL 3 · BLOCOS -->
+  <div class="panel" data-p="2">
+    <h2>10 Blocos · taxonomia v2.3</h2>
+    <h1>Organização do acervo</h1>
+    <div class="blocos">
+      <div class="bloco-mini"><div class="num">01</div><div class="nm">Vida Funcional</div><div class="ct">8.074</div></div>
+      <div class="bloco-mini"><div class="num">02</div><div class="nm">Capacitação</div><div class="ct">4.108</div></div>
+      <div class="bloco-mini"><div class="num">03</div><div class="nm">Recursos</div><div class="ct">2.945</div></div>
+      <div class="bloco-mini"><div class="num">04</div><div class="nm">Atos</div><div class="ct">7.892</div></div>
+      <div class="bloco-mini"><div class="num">05</div><div class="nm">Legislação</div><div class="ct">3.514</div></div>
+      <div class="bloco-mini"><div class="num">06</div><div class="nm">Processos</div><div class="ct">2.176</div></div>
+      <div class="bloco-mini"><div class="num">07</div><div class="nm">Governança</div><div class="ct">1.847</div></div>
+      <div class="bloco-mini"><div class="num">08</div><div class="nm">Dashboards</div><div class="ct">96</div></div>
+      <div class="bloco-mini"><div class="num">09</div><div class="nm">Arquivo</div><div class="ct">17.158</div></div>
+      <div class="bloco-mini gold"><div class="num">10 ★</div><div class="nm">Baliza/Efetivo</div><div class="ct">1.254</div></div>
+    </div>
+    <div class="swipe-hint">← Voltar · → Próximo</div>
+  </div>
+
+  <!-- PAINEL 4 · COMPLIANCE -->
+  <div class="panel" data-p="3">
+    <h2>Compliance Score</h2>
+    <h1>Programa Integridade<br>PMMG/2024</h1>
+    <div class="gauge-wrap">
+      <div class="gauge-center">
+        <svg class="gauge-svg" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="82" fill="none" stroke="#1A2336" stroke-width="18"/>
+          <circle cx="100" cy="100" r="82" fill="none" stroke="url(#gm)" stroke-width="18" stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="93" transform="rotate(-90 100 100)"/>
+          <defs><linearGradient id="gm" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D88838"/><stop offset="100%" stop-color="#E8C77A"/></linearGradient></defs>
+        </svg>
+        <div class="gauge-overlay">
+          <div>
+            <div class="v">82</div>
+            <div class="l">DE 100</div>
+            <div class="t">↗ META 92</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="eixos-mini">
+      <div class="eixo-mini e1"><div class="e-top"><div class="e-nm">E1 · Liderança</div><div class="e-v">88</div></div><div class="e-bar"><div class="e-fl" style="width:88%"></div></div></div>
+      <div class="eixo-mini e2"><div class="e-top"><div class="e-nm">E2 · Riscos</div><div class="e-v">78</div></div><div class="e-bar"><div class="e-fl" style="width:78%"></div></div></div>
+      <div class="eixo-mini e3"><div class="e-top"><div class="e-nm">E3 · POPs</div><div class="e-v">86</div></div><div class="e-bar"><div class="e-fl" style="width:86%"></div></div></div>
+      <div class="eixo-mini e4"><div class="e-top"><div class="e-nm">E4 · Monitor.</div><div class="e-v">76</div></div><div class="e-bar"><div class="e-fl" style="width:76%"></div></div></div>
+    </div>
+    <div class="swipe-hint">← Voltar · → Próximo</div>
+  </div>
+
+  <!-- PAINEL 5 · AADP -->
+  <div class="panel" data-p="4">
+    <h2>Cronograma AADP · Res. 5.458/2025</h2>
+    <h1>Ciclo 2026 · 254 militares</h1>
+    <div class="aadp-progress">
+      <div class="a-bar"><div class="a-fill"></div><div class="a-today"></div></div>
+      <div class="a-label"><span>Set/25</span><span style="color:var(--gold)">Hoje · 42%</span><span>Ago/26</span></div>
+    </div>
+    <div class="aadp-stages">
+      <div class="aadp-stage done"><div class="st">✓</div><div><div class="n">Auto-avaliação</div><div class="w">Out/2025 · 254/254</div></div></div>
+      <div class="aadp-stage done"><div class="st">✓</div><div><div class="n">Avaliação chefias</div><div class="w">Nov/2025 · 248/254</div></div></div>
+      <div class="aadp-stage cur"><div class="st">3</div><div><div class="n">Revisão consolidada</div><div class="w">Mai/2026 · 12 divergências</div></div></div>
+      <div class="aadp-stage fut"><div class="st">4</div><div><div class="n">Período recursos</div><div class="w">Jun/2026</div></div></div>
+      <div class="aadp-stage fut"><div class="st">5</div><div><div class="n">Análise recursos</div><div class="w">Jul/2026</div></div></div>
+      <div class="aadp-stage fut"><div class="st">6</div><div><div class="n">Homologação final</div><div class="w">15/Ago/2026</div></div></div>
+    </div>
+    <div class="swipe-hint">← Voltar · → Próximo</div>
+  </div>
+
+  <!-- PAINEL 6 · PRAZOS LIVE -->
+  <div class="panel" data-p="5">
+    <h2>Prazos críticos · countdown live</h2>
+    <h1>O que está vencendo</h1>
+    <div class="countdowns">
+      <div class="cdown crit">
+        <div class="c-top"><div class="c-ttl">Folha de pagamento maio/2026</div><div class="c-pri">CRÍT</div></div>
+        <div class="c-timer" data-deadline="2026-05-25T23:59:59">
+          <div class="c-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+          <div class="c-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+          <div class="c-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+          <div class="c-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+        </div>
+        <div class="c-meta"><span>F3 conduz</span><span>25/Mai 23h59</span></div>
+      </div>
+      <div class="cdown crit">
+        <div class="c-top"><div class="c-ttl">AADP · divergências > 20%</div><div class="c-pri">CRÍT</div></div>
+        <div class="c-timer" data-deadline="2026-05-20T23:59:59">
+          <div class="c-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+          <div class="c-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+          <div class="c-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+          <div class="c-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+        </div>
+        <div class="c-meta"><span>F1 + Chefia</span><span>20/Mai · 12 itens</span></div>
+      </div>
+      <div class="cdown warn">
+        <div class="c-top"><div class="c-ttl">Aux-Alimentação · prestação contas</div><div class="c-pri">ATEN</div></div>
+        <div class="c-timer" data-deadline="2026-06-10T17:00:00">
+          <div class="c-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+          <div class="c-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+          <div class="c-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+          <div class="c-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+        </div>
+        <div class="c-meta"><span>F3 · Dec.49.006</span><span>10/Jun</span></div>
+      </div>
+      <div class="cdown info">
+        <div class="c-top"><div class="c-ttl">Audit DA-066 · privacidade</div><div class="c-pri">PROG</div></div>
+        <div class="c-timer" data-deadline="2026-06-02T09:00:00">
+          <div class="c-cell"><div class="cv c-d">--</div><div class="cl">D</div></div>
+          <div class="c-cell"><div class="cv c-h">--</div><div class="cl">H</div></div>
+          <div class="c-cell"><div class="cv c-m">--</div><div class="cl">M</div></div>
+          <div class="c-cell"><div class="cv c-s">--</div><div class="cl">S</div></div>
+        </div>
+        <div class="c-meta"><span>Chefia · 1ª terça</span><span>02/Jun 09h</span></div>
+      </div>
+    </div>
+    <div class="swipe-hint">← Voltar · → Próximo</div>
+  </div>
+
+  <!-- PAINEL 7 · IDENTIDADE -->
+  <div class="panel" data-p="6">
+    <h2>Identidade institucional</h2>
+    <h1>SADM 56 BPM</h1>
+    <div class="id-hero">
+      <div class="crest">56</div>
+      <div style="font-family:'IBM Plex Serif',serif;font-size:16px;font-weight:600;color:var(--gold);margin-top:6px">56º Batalhão</div>
+      <div class="city">Itajubá · MG</div>
+      <div class="quote">"Servir e proteger com integridade, eficiência e respeito à dignidade humana."</div>
+    </div>
+    <div class="vals">
+      <div class="val"><div class="vi">★ Missão</div><div class="vn">Excelência administrativa</div><div class="vd">Operacionalizar vida funcional dos militares com transparência, agilidade e conformidade.</div></div>
+      <div class="val"><div class="vi">★ Visão</div><div class="vn">SADM-referência</div><div class="vd">Modelo de gestão · benchmark replicável a outros batalhões PMMG.</div></div>
+      <div class="val"><div class="vi">★ Valores</div><div class="vn">Integridade · Eficiência · Cuidado</div><div class="vd">254 militares como pessoas · cloud-first · POP-driven · doutrina aplicada.</div></div>
+    </div>
+    <div class="swipe-hint">← Voltar · ↻ Ciclo</div>
+  </div>
+
+</div>
+
+<!-- NAV FIXED -->
+<div class="nav-fixed">
+  <button class="nav-btn" id="navPrev">‹ Anterior</button>
+  <button class="nav-btn mid" id="navPlay">⏸ Auto</button>
+  <button class="nav-btn" id="navNext">Próximo ›</button>
+</div>
+
+<script>
+(function(){
+  const panels=document.querySelectorAll('.panel');
+  const dotsEl=document.getElementById('dots');
+  const prog=document.getElementById('prog');
+  const tbSub=document.getElementById('tbSub');
+  const navPlay=document.getElementById('navPlay');
+  const labels=['Estado','Operadores','10 Blocos','Compliance','Cronograma AADP','Prazos críticos','Identidade'];
+  let cur=0,playing=true,elapsed=0;
+  const ROT=18000,TICK=200;
+
+  // Build dots
+  panels.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>show(i);dotsEl.appendChild(d);
+  });
+  const dots=dotsEl.querySelectorAll('.dot');
+
+  function show(i){
+    panels.forEach(p=>p.classList.remove('active'));
+    panels[i].classList.add('active');
+    dots.forEach(d=>d.classList.remove('active'));
+    dots[i].classList.add('active');
+    cur=i;elapsed=0;prog.style.width='0%';
+    tbSub.textContent='Painel '+(i+1)+' / '+panels.length+' · '+labels[i];
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function tick(){
+    if(!playing)return;
+    elapsed+=TICK;
+    prog.style.width=(elapsed/ROT*100)+'%';
+    if(elapsed>=ROT){cur=(cur+1)%panels.length;show(cur);}
+  }
+  setInterval(tick,TICK);
+
+  document.getElementById('navPrev').onclick=()=>{cur=(cur-1+panels.length)%panels.length;show(cur);};
+  document.getElementById('navNext').onclick=()=>{cur=(cur+1)%panels.length;show(cur);};
+  navPlay.onclick=()=>{playing=!playing;navPlay.textContent=playing?'⏸ Auto':'▶ Play';};
+
+  // SWIPE
+  let xStart=null;
+  document.addEventListener('touchstart',e=>{xStart=e.touches[0].clientX;});
+  document.addEventListener('touchend',e=>{
+    if(xStart===null)return;
+    const dx=e.changedTouches[0].clientX-xStart;
+    if(Math.abs(dx)>50){
+      if(dx<0){cur=(cur+1)%panels.length;show(cur);}
+      else{cur=(cur-1+panels.length)%panels.length;show(cur);}
+    }
+    xStart=null;
+  });
+
+  // CLOCK
+  const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  function clk(){
+    const d=new Date();
+    document.getElementById('tbTime').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('tbDate').textContent=dias[d.getDay()].toUpperCase()+' '+d.getDate()+'/'+String(d.getMonth()+1).padStart(2,'0');
+  }
+  setInterval(clk,1000);clk();
+
+  // COUNTDOWNS
+  function cd(){
+    document.querySelectorAll('.c-timer').forEach(t=>{
+      const dl=new Date(t.dataset.deadline);
+      const diff=Math.max(0,dl-new Date());
+      const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+      t.querySelector('.c-d').textContent=String(d).padStart(2,'0');
+      t.querySelector('.c-h').textContent=String(h).padStart(2,'0');
+      t.querySelector('.c-m').textContent=String(m).padStart(2,'0');
+      t.querySelector('.c-s').textContent=String(s).padStart(2,'0');
+    });
+  }
+  setInterval(cd,1000);cd();
+})();
+</script>
+
+<div class="live-stamp" style="margin:18px 4px 8px"><span class="live-dot"></span><span>Atualizado em <b id="liveStamp">--:--:--</b> · agora</span></div>
+<script>(function(){function s(){var d=new Date();document.getElementById("liveStamp").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")}setInterval(s,1000);s();})();</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SADM 56 BPM · Hub Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16; --bg2:#0D121C; --bg3:#131A28; --bg4:#1A2336; --bg5:#232E47;
+  --line:#1F2A40; --line2:#2E3B58; --line3:#3A4A6E;
+  --txt:#E8EBF0; --txt2:#C5CBD8; --mut:#8A95AC; --dim:#5A6478;
+  --gold:#C9A348; --goldL:#E8C77A; --goldD:#8B6F2E;
+  --blue:#4A8AD8; --blueL:#7BB4E8;
+  --green:#4ABF7A; --greenL:#8FD9A8;
+  --purple:#8A5AD8; --purpleL:#B894E8;
+  --red:#C84141; --redL:#E89090;
+  --orange:#D88838; --orangeL:#F0B070;
+  --cyan:#3AB5C8; --cyanL:#7BD0DC;
+  --safe-top:max(env(safe-area-inset-top),18px);
+  --safe-bottom:max(env(safe-area-inset-bottom),18px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;min-height:100dvh;width:100vw;overflow-x:hidden}
+body{padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);padding-left:14px;padding-right:14px}
+
+/* === STATUS BAR · TOPO === */
+.status-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 4px 14px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.5px;
+  color:var(--mut);text-transform:uppercase
+}
+.status-bar .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:6px;vertical-align:middle;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}
+
+/* === HERO === */
+.hero{
+  background:linear-gradient(160deg,var(--bg3) 0%,var(--bg2) 50%,var(--bg) 100%);
+  border:1px solid var(--line2);border-radius:22px;padding:28px 22px;
+  position:relative;overflow:hidden;
+  text-align:center;margin-bottom:18px;
+  box-shadow:0 12px 36px rgba(0,0,0,0.55)
+}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),var(--goldL),var(--gold),transparent)}
+.hero::after{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(201,163,72,0.08) 0%,transparent 50%);pointer-events:none;animation:rotate 32s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.crest{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,var(--bg4),var(--bg5));
+  border:2.5px solid var(--gold);
+  display:grid;place-items:center;
+  font-family:'IBM Plex Serif',serif;font-size:34px;font-weight:700;color:var(--gold);
+  margin:0 auto 18px;
+  box-shadow:0 0 32px rgba(201,163,72,0.4),inset 0 2px 8px rgba(232,199,122,0.2);
+  position:relative;z-index:1
+}
+.hero h1{font-family:'IBM Plex Serif',serif;font-size:21px;font-weight:600;color:var(--gold);letter-spacing:0.3px;line-height:1.25;position:relative;z-index:1}
+.hero .city{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut);letter-spacing:3px;margin-top:8px;text-transform:uppercase;position:relative;z-index:1}
+.hero .quote{font-family:'IBM Plex Serif',serif;font-size:11.5px;color:var(--txt2);font-style:italic;margin-top:14px;line-height:1.6;position:relative;z-index:1;padding:0 8px}
+
+/* === CLOCK CARD === */
+.clock-card{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--goldD) 100%);
+  color:var(--bg);border-radius:18px;padding:20px 22px;
+  margin-bottom:18px;
+  display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;
+  box-shadow:0 10px 28px rgba(201,163,72,0.3),inset 0 2px 0 rgba(255,255,255,0.2);
+  position:relative;overflow:hidden
+}
+.clock-card::after{content:'';position:absolute;top:0;right:-30%;width:60%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.12) 50%,transparent 60%);animation:shimmer 6s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%) translateY(-50%) rotate(20deg)}100%{transform:translateX(200%) translateY(-50%) rotate(20deg)}}
+.clock-card .time{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;letter-spacing:1px;line-height:1}
+.clock-card .date{font-family:'IBM Plex Mono',monospace;font-size:10.5px;margin-top:4px;opacity:0.85;letter-spacing:0.5px}
+.clock-card .cycle{font-family:'IBM Plex Mono',monospace;font-size:9.5px;margin-top:3px;opacity:0.75;letter-spacing:1.2px;text-transform:uppercase}
+.clock-card .pulse-ring{width:48px;height:48px;border-radius:50%;background:rgba(10,14,22,0.18);border:2px solid var(--bg);display:grid;place-items:center;font-family:'IBM Plex Serif',serif;font-weight:700;font-size:18px;color:var(--bg);box-shadow:inset 0 2px 6px rgba(0,0,0,0.2)}
+
+/* === KPI STRIP === */
+.kpi-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px}
+.kpi-mini{
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:14px;padding:14px 8px;
+  text-align:center;
+  box-shadow:0 4px 14px rgba(0,0,0,0.35);
+  position:relative;overflow:hidden
+}
+.kpi-mini::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent,var(--gold)),transparent)}
+.kpi-mini.g{--accent:var(--greenL)}.kpi-mini.b{--accent:var(--blueL)}.kpi-mini.p{--accent:var(--purpleL)}
+.kpi-mini .v{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--accent,var(--gold));line-height:1;letter-spacing:-0.5px}
+.kpi-mini .l{font-size:9.5px;color:var(--mut);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* === SECTION LABEL === */
+.section-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);
+  text-transform:uppercase;letter-spacing:2.5px;
+  margin:24px 4px 12px;display:flex;align-items:center;gap:10px
+}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+/* === LINK CARDS · BIG TOUCH === */
+.link-card{
+  display:block;text-decoration:none;color:inherit;
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:18px;
+  padding:20px 22px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+  box-shadow:0 6px 22px rgba(0,0,0,0.4);
+  transition:transform 0.15s ease,box-shadow 0.15s ease,border-color 0.2s ease;
+  -webkit-tap-highlight-color:transparent
+}
+.link-card:active{transform:scale(0.98);box-shadow:0 4px 14px rgba(0,0,0,0.3)}
+.link-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent,var(--gold)),transparent)}
+.link-card::after{content:'›';position:absolute;right:22px;top:50%;transform:translateY(-50%);font-size:32px;color:var(--accent,var(--gold));font-weight:300;line-height:1}
+.link-card .row{display:flex;align-items:center;gap:14px;padding-right:24px}
+.link-card .icon{
+  width:54px;height:54px;border-radius:14px;flex-shrink:0;
+  display:grid;place-items:center;
+  font-family:'IBM Plex Serif',serif;font-weight:700;font-size:22px;
+  background:linear-gradient(135deg,var(--accent,var(--gold)),var(--accentD,var(--goldD)));
+  color:var(--bg);
+  box-shadow:0 6px 16px rgba(0,0,0,0.35),inset 0 2px 4px rgba(255,255,255,0.15)
+}
+.link-card .nm{font-family:'IBM Plex Serif',serif;font-size:16px;font-weight:600;color:var(--txt);line-height:1.2}
+.link-card .nm small{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;font-weight:400}
+.link-card .desc{font-size:12px;color:var(--txt2);line-height:1.5;margin-top:10px;padding-right:8px}
+.link-card .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.link-card .tag{font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--bg4);color:var(--accent,var(--gold));padding:3px 8px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;border:1px solid var(--line)}
+
+/* Variantes de cor */
+.link-card.tv{--accent:var(--goldL);--accentD:var(--goldD)}
+.link-card.gest{--accent:var(--blueL);--accentD:#2A5A9C}
+.link-card.oper{--accent:var(--orangeL);--accentD:#A05D1F}
+.link-card.kg{--accent:var(--purpleL);--accentD:#5A3899}
+.link-card.aprs{--accent:var(--cyanL);--accentD:#1F7080}
+
+/* === QUICK ROW === */
+.quick-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.quick-card{
+  display:block;text-decoration:none;color:inherit;
+  background:linear-gradient(180deg,var(--bg3),var(--bg2));
+  border:1px solid var(--line2);border-radius:14px;
+  padding:14px;text-align:center;
+  transition:all 0.2s
+}
+.quick-card:active{transform:scale(0.97)}
+.quick-card .qi{font-size:24px;display:block;margin-bottom:6px}
+.quick-card .ql{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:0.8px}
+
+/* === FOOTER === */
+.foot{
+  margin-top:28px;padding:18px 4px 8px;
+  border-top:1px solid var(--line2);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut);
+  text-align:center;line-height:1.7;letter-spacing:0.5px
+}
+.foot .gold{color:var(--gold)}
+.foot .row{margin:3px 0}
+.foot .badge-onda{display:inline-block;padding:3px 8px;background:rgba(201,163,72,0.1);border:1px solid var(--gold);border-radius:4px;color:var(--gold);margin-top:8px;font-weight:600;letter-spacing:1px}
+
+/* === Compensar Drive iframe toolbar (caso aberto via preview) === */
+@media (max-width:600px){
+  body{padding-left:12px;padding-right:12px}
+}
+/* === PREMIUM POLISH · aurora + glow + live stamp === */
+.premium-aurora{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden;opacity:0.45}
+.premium-aurora::before,.premium-aurora::after{content:"";position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);animation:auroraFlow 22s ease-in-out infinite}
+.premium-aurora::before{background:radial-gradient(circle,rgba(201,163,72,0.18),transparent 60%);top:-200px;left:-200px}
+.premium-aurora::after{background:radial-gradient(circle,rgba(74,138,216,0.12),transparent 60%);bottom:-200px;right:-200px;animation-delay:-11s}
+@keyframes auroraFlow{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,40px) scale(0.95)}}
+.live-stamp{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;background:rgba(74,191,122,0.08);border:1px solid rgba(74,191,122,0.25);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--greenL);letter-spacing:0.8px;text-transform:uppercase}
+.live-stamp .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:livePulse 1.4s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.live-stamp b{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+<div class="premium-aurora"></div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div><span class="dot"></span>ONLINE · WORKSPACE</div>
+  <div>v2.8+ ★</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="crest">56</div>
+  <h1>SADM · 56º Batalhão<br>de Polícia Militar</h1>
+  <div class="city">Itajubá · Minas Gerais</div>
+  <div class="quote">"Polícia Militar de Minas Gerais · servir e proteger com integridade, eficiência e respeito à dignidade humana."</div>
+</div>
+
+<!-- CLOCK CARD -->
+<div class="clock-card">
+  <div>
+    <div class="time" id="hTime">--:--:--</div>
+    <div class="date" id="hDate">--</div>
+    <div class="cycle" id="hCycle">CICLO · --/272</div>
+  </div>
+  <div class="pulse-ring">56</div>
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi-mini"><div class="v">254</div><div class="l">Militares</div></div>
+  <div class="kpi-mini g"><div class="v">49k</div><div class="l">Documentos</div></div>
+  <div class="kpi-mini b"><div class="v">70</div><div class="l">DAs canônicas</div></div>
+</div>
+
+<!-- SECTION · PAINÉIS -->
+<div class="section-label">Painéis Mobile · 9:16</div>
+
+<a class="link-card tv" href="./tv-mural.html" target="_blank" rel="noopener">
+  <div class="row">
+    <div class="icon">▣</div>
+    <div>
+      <div class="nm">TV Mural Institucional<small>13 painéis · rotativo</small></div>
+    </div>
+  </div>
+  <div class="desc">Painéis rotativos com KPIs, operadores, saúde, aniversariantes, compliance e identidade institucional.</div>
+  <div class="tags"><span class="tag">Auto-refresh 25s</span><span class="tag">★ Destaque</span></div>
+</a>
+
+<a class="link-card gest" href="./gestao.html" target="_blank" rel="noopener">
+  <div class="row">
+    <div class="icon">⚖</div>
+    <div>
+      <div class="nm">Gestão Estratégica<small>Compliance · AADP</small></div>
+    </div>
+  </div>
+  <div class="desc">Score do Programa Integridade PMMG · cronograma AADP Res. 5.458/2025 · 254 militares no ciclo.</div>
+  <div class="tags"><span class="tag">82/100</span><span class="tag">Meta 92</span></div>
+</a>
+
+<a class="link-card oper" href="./operacional.html" target="_blank" rel="noopener">
+  <div class="row">
+    <div class="icon">⌚</div>
+    <div>
+      <div class="nm">Operacional Live<small>Prazos · Performance · Aniv</small></div>
+    </div>
+  </div>
+  <div class="desc">Countdowns ao vivo · normas DOU/BGPM/IO-MG · performance por operador · aniversariantes 7 dias.</div>
+  <div class="tags"><span class="tag">Refresh 1s</span><span class="tag">Sentinela</span></div>
+</a>
+
+<a class="link-card aprs" href="https://drive.google.com/file/d/1Qekuyx_hPkJX0LgfaFOHhYovv36m4WdD/view" target="_blank" rel="noopener">
+  <div class="row">
+    <div class="icon">★</div>
+    <div>
+      <div class="nm">Apresentação NEXUS<small>13 slides técnicos</small></div>
+    </div>
+  </div>
+  <div class="desc">Narrativa completa para Comando · IBM Plex · 3 diagramas SVG canônicos · ~15 min de leitura.</div>
+  <div class="tags"><span class="tag">v9.0</span><span class="tag">Densa</span></div>
+</a>
+
+<a class="link-card kg" href="https://drive.google.com/file/d/1HCZ-ATV_5eUp4kaVrIimpJO3XVlFxr_z/view" target="_blank" rel="noopener">
+  <div class="row">
+    <div class="icon">⛓</div>
+    <div>
+      <div class="nm">Knowledge Graph<small>67 nós · 156 arestas</small></div>
+    </div>
+  </div>
+  <div class="desc">Mapa interativo D3.js · blocos, funções, normas, POPs, módulos, DAs · filtros por tipo.</div>
+  <div class="tags"><span class="tag">D3 force</span><span class="tag">Interativo</span></div>
+</a>
+
+<!-- ACESSO RÁPIDO -->
+<div class="section-label">Atalhos Workspace</div>
+<div class="quick-row">
+  <a class="quick-card" href="https://drive.google.com/drive/folders/1gp_DyGk1NvB92K63NepBJSaoCalK4EH7" target="_blank" rel="noopener">
+    <span class="qi">☁</span><span class="ql">Drive SADM</span>
+  </a>
+  <a class="quick-card" href="https://calendar.google.com" target="_blank" rel="noopener">
+    <span class="qi">📅</span><span class="ql">Calendar</span>
+  </a>
+  <a class="quick-card" href="https://mail.google.com" target="_blank" rel="noopener">
+    <span class="qi">✉</span><span class="ql">Gmail</span>
+  </a>
+  <a class="quick-card" href="https://docs.google.com/spreadsheets/d/1M-G24FHL83UefNL1WVv5oHQFmjeyDnMPCrWbAQ2B8iM" target="_blank" rel="noopener">
+    <span class="qi">▦</span><span class="ql">COMANDO_SADM</span>
+  </a>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <div class="row"><span class="gold">SADM 56º BPM · Itajubá-MG</span></div>
+  <div class="row">17ª RPM · Polícia Militar de Minas Gerais</div>
+  <div class="row" style="margin-top:6px;color:var(--dim)">Cap. Fillipe Caldeira · Chefia SADM</div>
+  <span class="badge-onda">★ ONDA 28+ MOBILE</span>
+</div>
+
+<script>
+(function(){
+  const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  function tick(){
+    const d=new Date();
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    const ss=String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('hTime').textContent=hh+':'+mm+':'+ss;
+    document.getElementById('hDate').textContent=dias[d.getDay()]+' · '+d.getDate()+' '+meses[d.getMonth()]+' '+d.getFullYear();
+    const start=new Date(d.getFullYear(),0,1);
+    const dc=Math.floor((d-start)/(1000*60*60*24))+1;
+    document.getElementById('hCycle').textContent='CICLO PRIMORDIA · '+dc+'/272';
+  }
+  setInterval(tick,1000);tick();
+})();
+</script>
+
+<div class="live-stamp" style="margin:18px 4px 8px"><span class="live-dot"></span><span>Atualizado em <b id="liveStamp">--:--:--</b> · agora</span></div>
+<script>(function(){function s(){var d=new Date();document.getElementById("liveStamp").textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")}setInterval(s,1000);s();})();</script>
+</body>
+</html>
