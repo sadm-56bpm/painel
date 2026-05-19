@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>SADM 56 BPM · Painel Chefia</title>
+<link rel="icon" href="../favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16; --bg-2:#0D121C; --bg-3:#131A28; --bg-4:#1A2336;
+  --ink:#E8EBF0; --ink-2:#C5CBD8; --ink-3:#8A95AC; --ink-4:#5A6478;
+  --gold:#C9A348; --gold-2:#E8C77A; --gold-3:#9C7F3A;
+  --blue:#7BB4E8; --green:#7BC97B; --red:#E89090; --orange:#F0B070;
+  --line:#1F2A40; --line-2:#283449;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:100vh}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(201,163,72,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 100%,rgba(123,180,232,.06) 0%,transparent 50%),
+    linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);
+  pointer-events:none;
+}
+.lock-screen{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;
+}
+.lock-screen.hidden{display:none}
+.lock-screen h1{font-family:'IBM Plex Serif',serif;font-size:24px;color:var(--gold-2);font-weight:600}
+.lock-screen p{color:var(--ink-3);font-size:13px;letter-spacing:.5px}
+.lock-screen input{background:var(--bg-3);border:1px solid var(--line);color:var(--ink);padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:14px;border-radius:2px;width:280px;text-align:center;letter-spacing:2px}
+.lock-screen input:focus{outline:none;border-color:var(--gold)}
+.lock-screen button{background:var(--gold);color:var(--bg);border:none;padding:10px 28px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;letter-spacing:1px;cursor:pointer;border-radius:2px;text-transform:uppercase;font-size:12px}
+.lock-screen button:hover{background:var(--gold-2)}
+.error{color:var(--red);font-size:12px;height:14px}
+.container{max-width:1400px;margin:0 auto;padding:30px 24px 80px}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:24px;margin-bottom:32px;border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-mark{
+  width:54px;height:54px;border-radius:50%;
+  background:radial-gradient(circle,var(--gold-2) 0%,var(--gold-3) 70%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Serif',serif;font-weight:700;color:var(--bg);font-size:20px;
+  box-shadow:0 0 20px rgba(201,163,72,.4);
+  animation:pulse 3s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(201,163,72,.4)}50%{box-shadow:0 0 28px rgba(201,163,72,.7)}}
+.brand-text h1{font-family:'IBM Plex Serif',serif;font-weight:700;font-size:22px;color:var(--gold-2);line-height:1.1}
+.brand-text .sub{font-size:11px;letter-spacing:2px;color:var(--ink-3);text-transform:uppercase;margin-top:4px}
+.clock{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:28px;font-weight:500}
+.clock-sub{font-size:10px;color:var(--ink-3);letter-spacing:1.5px;text-align:right;margin-top:2px;text-transform:uppercase}
+.shortcuts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;margin-bottom:36px;
+}
+.short-btn{
+  background:var(--bg-3);border:1px solid var(--line);padding:14px 12px;
+  display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;color:var(--ink-2);
+  border-radius:2px;transition:all .15s ease;font-size:13px;
+}
+.short-btn:hover{border-color:var(--gold);color:var(--gold-2);background:var(--bg-4)}
+.short-btn .ico{font-size:18px;color:var(--gold)}
+.short-btn .star{color:var(--gold);font-size:10px}
+.companion-btn{
+  background:linear-gradient(135deg,var(--bg-3),var(--bg-4));
+  border:1px solid var(--gold-3);color:var(--gold-2);
+}
+.companion-btn:hover{background:linear-gradient(135deg,var(--bg-4),var(--bg-3));border-color:var(--gold-2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.panel{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:3px;
+  padding:18px 20px;transition:border-color .15s ease;
+}
+.panel:hover{border-color:var(--line-2)}
+.panel h2{
+  font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;
+  color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;
+  padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel h2 .badge{
+  background:var(--bg-4);color:var(--ink-3);font-size:9px;padding:2px 6px;
+  border-radius:1px;letter-spacing:1px;font-weight:500;
+}
+.panel ul{list-style:none}
+.panel li{margin:0}
+.panel li a{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 6px;border-bottom:1px solid var(--bg-4);
+  color:var(--ink-2);text-decoration:none;font-size:13px;transition:all .12s ease;
+}
+.panel li:last-child a{border-bottom:none}
+.panel li a:hover{color:var(--gold-2);padding-left:10px}
+.panel li a .star{color:var(--gold);font-size:10px;margin-right:6px}
+.panel li a .arr{color:var(--ink-4);font-size:11px;opacity:0;transition:opacity .12s ease}
+.panel li a:hover .arr{opacity:1}
+footer{
+  margin-top:60px;padding:24px 0 12px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:11px;color:var(--ink-3);letter-spacing:1px;
+}
+footer .meta{font-family:'IBM Plex Mono',monospace}
+footer a{color:var(--gold);text-decoration:none}
+footer a:hover{color:var(--gold-2)}
+@media (max-width:720px){
+  .container{padding:20px 14px 60px}
+  .clock{font-size:20px}
+  .brand-text h1{font-size:16px}
+  .grid{grid-template-columns:1fr}
+  .shortcuts{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- Lock screen (chave de acesso) -->
+<div class="lock-screen" id="lock">
+  <h1>★ Painel da Chefia</h1>
+  <p>Acesso restrito · Cap. Caldeira · SADM 56 BPM</p>
+  <input type="password" id="pwd" placeholder="chave" autocomplete="off" autofocus>
+  <button onclick="unlock()">Entrar</button>
+  <div class="error" id="err"></div>
+</div>
+
+<!-- Conteúdo -->
+<div class="container" id="content" style="display:none">
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">56</div>
+    <div class="brand-text">
+      <h1>SADM · Painel da Chefia</h1>
+      <div class="sub">56º BPM · 17ª RPM · Itajubá / MG</div>
+    </div>
+  </div>
+  <div>
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="clock-sub" id="datetime">carregando</div>
+  </div>
+</header>
+
+<!-- 6 atalhos ícones diretos -->
+<div class="shortcuts">
+  <a class="short-btn" href="https://sadm-56bpm.github.io/painel/" target="_blank"><span class="ico">⌂</span> Hub Central</a>
+  <a class="short-btn" href="https://drive.google.com/drive/my-drive" target="_blank"><span class="ico">📁</span> Meu Drive</a>
+  <a class="short-btn" href="https://calendar.google.com/" target="_blank"><span class="ico">📅</span> Calendar</a>
+  <a class="short-btn" href="https://docs.google.com/spreadsheets/d/19v2ovwe8BK_notAc95xxSRUdgeZnHcq3uNgs70OjTac/edit" target="_blank"><span class="star">★</span> Baliza 2026</a>
+  <a class="short-btn" href="https://claude.ai/" target="_blank"><span class="ico">◈</span> Claude</a>
+  <a class="short-btn" href="https://script.google.com/home/projects/1Xf7r46UmR7qpZ3Bhfl-5iiy6P1TixHT4ukZZwkc3949Xaj54fVGDvDO9/edit" target="_blank"><span class="star">★</span> Master</a>
+  <button class="short-btn companion-btn" onclick="toggleCompanion()"><span class="ico">▦</span> Companion</button>
+</div>
+
+<!-- 7 painéis categorizados -->
+<div class="grid">
+
+<div class="panel">
+  <h2>01 · IA <span class="badge">9</span></h2>
+  <ul>
+    <li><a href="https://claude.ai/" target="_blank">Claude · chat <span class="arr">›</span></a></li>
+    <li><a href="https://console.anthropic.com/" target="_blank">Anthropic Console <span class="arr">›</span></a></li>
+    <li><a href="https://platform.claude.com/settings/devices" target="_blank"><span class="star">★</span>Devices (DA-063) <span class="arr">›</span></a></li>
+    <li><a href="https://console.anthropic.com/settings/usage" target="_blank">Anthropic · Usage <span class="arr">›</span></a></li>
+    <li><a href="https://docs.anthropic.com/" target="_blank">Anthropic Docs <span class="arr">›</span></a></li>
+    <li><a href="https://aistudio.google.com/" target="_blank">Google AI Studio <span class="arr">›</span></a></li>
+    <li><a href="https://aistudio.google.com/api-keys?project=sadm56-bpm" target="_blank">AI Studio · API Keys <span class="arr">›</span></a></li>
+    <li><a href="https://aistudio.google.com/usage" target="_blank">AI Studio · Uso/Quota <span class="arr">›</span></a></li>
+    <li><a href="https://aistudio.google.com/rate-limit" target="_blank">AI Studio · Rate Limit <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>02 · Dev <span class="badge">10</span></h2>
+  <ul>
+    <li><a href="https://script.google.com/home" target="_blank">Apps Script · Projetos <span class="arr">›</span></a></li>
+    <li><a href="https://script.google.com/home/projects/1Xf7r46UmR7qpZ3Bhfl-5iiy6P1TixHT4ukZZwkc3949Xaj54fVGDvDO9/edit" target="_blank"><span class="star">★</span>SADM_AUTOMATION_MASTER <span class="arr">›</span></a></li>
+    <li><a href="https://script.google.com/home/triggers" target="_blank">Triggers <span class="arr">›</span></a></li>
+    <li><a href="https://script.google.com/home/executions" target="_blank">Execuções <span class="arr">›</span></a></li>
+    <li><a href="https://console.cloud.google.com/home/dashboard?project=sadm56-bpm" target="_blank">GCP · sadm56-bpm <span class="arr">›</span></a></li>
+    <li><a href="https://console.cloud.google.com/apis/credentials?project=sadm56-bpm" target="_blank">GCP · Credenciais <span class="arr">›</span></a></li>
+    <li><a href="https://console.cloud.google.com/apis/dashboard?project=sadm56-bpm" target="_blank">GCP · APIs &amp; Services <span class="arr">›</span></a></li>
+    <li><a href="https://github.com/sadm-56bpm" target="_blank">GitHub Org · sadm-56bpm <span class="arr">›</span></a></li>
+    <li><a href="https://github.com/sadm-56bpm/painel" target="_blank">Repo · painel <span class="arr">›</span></a></li>
+    <li><a href="https://github.com/google/clasp" target="_blank">clasp · docs <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>03 · Painéis <span class="badge">6</span></h2>
+  <ul>
+    <li><a href="https://sadm-56bpm.github.io/painel/" target="_blank"><span class="star">★</span>Hub Central <span class="arr">›</span></a></li>
+    <li><a href="https://sadm-56bpm.github.io/painel/apresentacao-mobile.html" target="_blank">Apresentação Executiva <span class="arr">›</span></a></li>
+    <li><a href="https://sadm-56bpm.github.io/painel/tv-mural-mobile.html" target="_blank">TV Mural <span class="arr">›</span></a></li>
+    <li><a href="https://sadm-56bpm.github.io/painel/gestao-mobile.html" target="_blank">Gestão Estratégica <span class="arr">›</span></a></li>
+    <li><a href="https://sadm-56bpm.github.io/painel/operacional-mobile.html" target="_blank">Operacional Live <span class="arr">›</span></a></li>
+    <li><a href="https://sadm-56bpm.github.io/painel-desktop/" target="_blank">Hub Desktop <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>04 · Workspace <span class="badge">7</span></h2>
+  <ul>
+    <li><a href="https://drive.google.com/drive/my-drive" target="_blank">Meu Drive <span class="arr">›</span></a></li>
+    <li><a href="https://drive.google.com/drive/u/0/recent" target="_blank">Drive · Recentes <span class="arr">›</span></a></li>
+    <li><a href="https://drive.google.com/drive/u/0/shared-with-me" target="_blank">Drive · Compartilhados <span class="arr">›</span></a></li>
+    <li><a href="https://calendar.google.com/calendar/u/0/r" target="_blank">Calendar (todos) <span class="arr">›</span></a></li>
+    <li><a href="https://mail.google.com/mail/u/0/" target="_blank">Gmail Institucional <span class="arr">›</span></a></li>
+    <li><a href="https://meet.google.com/" target="_blank">Google Meet <span class="arr">›</span></a></li>
+    <li><a href="https://sites.google.com/" target="_blank">Google Sites <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>05 · PMMG <span class="badge">6</span></h2>
+  <ul>
+    <li><a href="https://www.policiamilitar.mg.gov.br/" target="_blank">Site oficial PMMG <span class="arr">›</span></a></li>
+    <li><a href="https://intranet.policiamilitar.mg.gov.br/" target="_blank">Intranet PMMG <span class="arr">›</span></a></li>
+    <li><a href="https://intranet.policiamilitar.mg.gov.br/ementario/" target="_blank">Ementário · normas/atos <span class="arr">›</span></a></li>
+    <li><a href="https://www.imprensaoficial.mg.gov.br/" target="_blank">DOEMG · Imprensa Oficial <span class="arr">›</span></a></li>
+    <li><a href="https://www.almg.gov.br/" target="_blank">ALMG · Assembleia MG <span class="arr">›</span></a></li>
+    <li><a href="https://principal.policiamilitar.mg.gov.br/" target="_blank">Portal PMMG (login) <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>06 · Sheets <span class="badge">6</span></h2>
+  <ul>
+    <li><a href="https://docs.google.com/spreadsheets/d/19v2ovwe8BK_notAc95xxSRUdgeZnHcq3uNgs70OjTac/edit" target="_blank"><span class="star">★</span>Baliza Nominal 2026 <span class="arr">›</span></a></li>
+    <li><a href="https://docs.google.com/spreadsheets/d/1M-G24FHL83UefNL1WVv5oHQFmjeyDnMPCrWbAQ2B8iM/edit" target="_blank">COMANDO_SADM <span class="arr">›</span></a></li>
+    <li><a href="https://drive.google.com/drive/folders/1NFDCQRQgJAT8oAIWU8ZjOZOVFGzh_4uk" target="_blank">6_OUTROS_TRIAGEM <span class="arr">›</span></a></li>
+    <li><a href="https://docs.google.com/spreadsheets/u/0/" target="_blank">Sheets (lista) <span class="arr">›</span></a></li>
+    <li><a href="https://docs.google.com/document/u/0/" target="_blank">Docs (lista) <span class="arr">›</span></a></li>
+    <li><a href="https://docs.google.com/presentation/u/0/" target="_blank">Slides (lista) <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h2>07 · Auditoria <span class="badge">4</span></h2>
+  <ul>
+    <li><a href="https://platform.claude.com/settings/devices" target="_blank">Anthropic · Devices (DA-063) <span class="arr">›</span></a></li>
+    <li><a href="https://myaccount.google.com/security" target="_blank">Workspace · Segurança <span class="arr">›</span></a></li>
+    <li><a href="https://myaccount.google.com/permissions" target="_blank">Permissões de apps <span class="arr">›</span></a></li>
+    <li><a href="https://myactivity.google.com/myactivity" target="_blank">Atividade Google <span class="arr">›</span></a></li>
+  </ul>
+</div>
+
+</div>
+
+<footer>
+  <div class="meta">Onda 29 · Hub-only · DA-066 compliant · 55 links canônicos</div>
+  <div><a href="https://sadm-56bpm.github.io/painel/" target="_blank">↩ Hub público</a></div>
+</footer>
+
+</div>
+
+<!-- Companion Sidebar (oculto inicialmente) -->
+<div id="sadm-companion" style="display:none;position:fixed;top:0;right:0;width:340px;height:100vh;background:linear-gradient(180deg,#0A0E16,#0D121C);color:#E8EBF0;font-family:'IBM Plex Sans',sans-serif;z-index:99999;box-shadow:-8px 0 30px rgba(0,0,0,.5);padding:24px;overflow-y:auto;border-left:1px solid #1F2A40">
+<span style="position:absolute;top:14px;right:18px;cursor:pointer;color:#8A95AC;font-size:20px" onclick="toggleCompanion()">×</span>
+<h2 style="font-family:'IBM Plex Serif',serif;font-size:18px;color:#E8C77A;margin-bottom:14px">★ SADM Companion</h2>
+<div style="font-size:11px;color:#8A95AC;margin-bottom:4px;letter-spacing:1px">ITAJUBÁ · 56 BPM</div>
+<div style="margin-top:18px">
+  <h3 style="font-size:10px;color:#C9A348;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1F2A40">Atalhos rápidos</h3>
+  <a href="https://sadm-56bpm.github.io/painel/" target="_blank" style="color:#7BB4E8;text-decoration:none;font-size:11.5px;display:block;padding:8px;border:1px solid #1F2A40;border-radius:2px;margin-bottom:6px;background:#131A28">Hub Central</a>
+  <a href="https://docs.google.com/spreadsheets/d/19v2ovwe8BK_notAc95xxSRUdgeZnHcq3uNgs70OjTac/edit" target="_blank" style="color:#7BB4E8;text-decoration:none;font-size:11.5px;display:block;padding:8px;border:1px solid #1F2A40;border-radius:2px;margin-bottom:6px;background:#131A28">Baliza 2026</a>
+  <a href="https://script.google.com/home/projects/1Xf7r46UmR7qpZ3Bhfl-5iiy6P1TixHT4ukZZwkc3949Xaj54fVGDvDO9/edit" target="_blank" style="color:#7BB4E8;text-decoration:none;font-size:11.5px;display:block;padding:8px;border:1px solid #1F2A40;border-radius:2px;margin-bottom:6px;background:#131A28">Apps Script Master</a>
+  <a href="https://claude.ai/" target="_blank" style="color:#7BB4E8;text-decoration:none;font-size:11.5px;display:block;padding:8px;border:1px solid #1F2A40;border-radius:2px;margin-bottom:6px;background:#131A28">Claude</a>
+</div>
+<div style="margin-top:24px">
+  <h3 style="font-size:10px;color:#C9A348;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1F2A40">KPI</h3>
+  <div style="background:#131A28;border-left:3px solid #C9A348;padding:10px 12px;margin-bottom:8px;border-radius:2px">
+    <div style="font-size:22px;color:#E8C77A;font-weight:600;font-family:'IBM Plex Serif',serif">82/100</div>
+    <div style="font-size:10px;color:#8A95AC;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Compliance</div>
+  </div>
+  <div style="background:#131A28;border-left:3px solid #7BB4E8;padding:10px 12px;margin-bottom:8px;border-radius:2px">
+    <div style="font-size:22px;color:#E8C77A;font-weight:600;font-family:'IBM Plex Serif',serif">254</div>
+    <div style="font-size:10px;color:#8A95AC;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Militares Baliza</div>
+  </div>
+  <div style="background:#131A28;border-left:3px solid #7BC97B;padding:10px 12px;margin-bottom:8px;border-radius:2px">
+    <div style="font-size:22px;color:#E8C77A;font-weight:600;font-family:'IBM Plex Serif',serif">71</div>
+    <div style="font-size:10px;color:#8A95AC;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">DAs canônicas</div>
+  </div>
+</div>
+</div>
+
+<script>
+// Lock screen (segurança por obscuridade)
+const SECRET = 'sadm56';
+
+function unlock(){
+  const v = document.getElementById('pwd').value.trim().toLowerCase();
+  if(v === SECRET){
+    localStorage.setItem('sadm_chefia_ok','1');
+    document.getElementById('lock').classList.add('hidden');
+    document.getElementById('content').style.display='block';
+    startClock();
+  } else {
+    document.getElementById('err').textContent = 'Chave inválida';
+    document.getElementById('pwd').value='';
+  }
+}
+document.getElementById('pwd').addEventListener('keypress',e=>{if(e.key==='Enter')unlock()});
+
+// Verifica se já autenticou OU se chave veio na URL
+const urlKey = new URLSearchParams(location.search).get('k');
+if(urlKey && urlKey.toLowerCase() === SECRET){
+  localStorage.setItem('sadm_chefia_ok','1');
+}
+if(localStorage.getItem('sadm_chefia_ok') === '1'){
+  document.getElementById('lock').classList.add('hidden');
+  document.getElementById('content').style.display='block';
+  startClock();
+}
+
+// Relógio ao vivo
+function startClock(){
+  const upd=()=>{
+    const d=new Date();
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    const ss=String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent=`${hh}:${mm}:${ss}`;
+    const dia=['domingo','segunda','terça','quarta','quinta','sexta','sábado'][d.getDay()];
+    const dt=d.toLocaleDateString('pt-BR');
+    document.getElementById('datetime').textContent=`${dia} · ${dt}`;
+  };
+  upd();
+  setInterval(upd,1000);
+}
+
+// Companion toggle
+function toggleCompanion(){
+  const el=document.getElementById('sadm-companion');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+
+</body>
+</html>
